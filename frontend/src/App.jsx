@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import HomePage from "./"
+import HomePage from "./pages/HomePage.jsx"
 
 function App() {
 
@@ -9,10 +9,10 @@ function App() {
       path: '/',
       element: <HomePage />,
     },
-    {
-      path: '/about',
-      element: <AboutPage />,
-    },
+    // {
+    //   path: '/about',
+    //   element: <AboutPage />,
+    // },
   ]);
 
   return (

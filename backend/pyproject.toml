@@ -1,0 +1,16 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "I am doing investigation with poetry, fastapi and other tools."
+authors = [{ name = "Zahin_Abdullah", email = "zahinabdullahrakin@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["fastapi (>=0.115.11,<0.116.0)", "uvicorn (>=0.34.0,<0.35.0)"]
+
+[tool.poetry.scripts]
+dev = "backend.main:main"
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
