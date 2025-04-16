@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from backend.middlewares.verifyJWT import verifyJWT
+from backend.middlewares.auth import verifyJWT
 from backend.models.user_model import User
 
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Depends # type: ignore
 from backend.controllers.healthcheck_controllers import check_all
-from backend.middlewares.verifyJWT import verifyJWT
+from backend.middlewares.auth import verifyJWT
 
 router = APIRouter()
 

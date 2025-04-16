@@ -8,9 +8,8 @@ from backend.utils.token import gen_refresh_token
 from backend.utils.token import gen_access_token
 from passlib.context import CryptContext #type: ignore
 import os
-import json
 from backend.models.user_model import User
-from pydantic import BaseModel
+from fastapi.security import OAuth2PasswordRequestForm
 
 
 pass_context = CryptContext(schemes="bcrypt", deprecated="auto")
@@ -31,14 +30,14 @@ async def register(user: User):
     
   return {"message": "successfully created user"}
 
-async def login(login_data: BaseModel):
+async def login(login_data: OAuth2PasswordRequestForm):
   user = await User.find_one(User.username == login_data.username)
   
   if not user:
     return JSONResponse(content={"message": "user not found"}, status_code=404)
   
   if not pass_context.verify(login_data.password, user.password):
-    return JSONResponse(content={"message": "password is wrong"}, status_code=400)
+    raise HTTPException( status_code=400, detail={"message": "password is wrong"})
   
   refresh_token = await gen_refresh_token(str(user.id))
   access_token = await gen_access_token(user)
