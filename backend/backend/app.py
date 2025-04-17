@@ -12,15 +12,14 @@ from .routes.product_routes import router as product_router
 from .routes.news_routes import router as news_router
 from .routes.notification_routes import router as notification_router
 from .routes.healthcheck_routes import router as healthcheck_router
+from .routes.g_auth_routes import router as g_auth_router
 
 
 app = FastAPI()
 
 
 origins=[
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://localhost:5175"
+  "*"
 ]
 
 app.add_middleware(
@@ -44,3 +43,4 @@ app.include_router(admin_router, prefix="/api/v1/admin")
 app.include_router(product_router, prefix="/api/v1/product")
 app.include_router(news_router, prefix="/api/v1/news")
 app.include_router(notification_router, prefix="/api/v1/notification")
+app.include_router(g_auth_router, prefix="/auth/google")

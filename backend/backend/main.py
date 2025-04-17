@@ -6,7 +6,7 @@ import os
 
 def main():
   load_dotenv()
-  uvicorn.run("backend.app:app", host="localhost", port=8000, reload=True)
+  uvicorn.run("backend.app:app", host="localhost", port=3000, reload=True)
 
 
 

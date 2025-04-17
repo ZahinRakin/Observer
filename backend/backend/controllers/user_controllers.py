@@ -66,18 +66,18 @@ async def dummy_protected_route(user):
   return {"user": user.username}
   
 async def refresh_access_token(access_token: str):
-    decoded_token = jwt.get_unverified_claims(access_token)
-    
-    user = await User.get(decoded_token.get("id"))
-    if not user:
-        raise HTTPException(status_code=404, detail="No user found. Is this a fabricated token?")
+  decoded_token = jwt.get_unverified_claims(access_token)
+  
+  user = await User.get(decoded_token.get("id"))
+  if not user:
+    raise HTTPException(status_code=404, detail="No user found. Is this a fabricated token?")
 
-    new_access_token = await gen_access_token(user)
+  new_access_token = await gen_access_token(user)
 
-    return JSONResponse(
-        content={
-            "message": "Successfully refreshed the access token. token in header",
-        },
-        headers={"Authorization": f"Bearer {new_access_token}"}
-    )
+  return JSONResponse(
+    content={
+      "message": "Successfully refreshed the access token. token in header",
+    },
+    headers={"Authorization": f"Bearer {new_access_token}"}
+  )
   
