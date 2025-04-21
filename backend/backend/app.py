@@ -15,6 +15,10 @@ from .routes.healthcheck_routes import router as healthcheck_router
 from .routes.g_auth_routes import router as g_auth_router
 
 
+# have to delete later
+from .controllers.email_controllers import gmail_send_message
+
+
 app = FastAPI()
 
 
@@ -44,3 +48,8 @@ app.include_router(product_router, prefix="/api/v1/product")
 app.include_router(news_router, prefix="/api/v1/news")
 app.include_router(notification_router, prefix="/api/v1/notification")
 app.include_router(g_auth_router, prefix="/auth/google")
+
+
+
+# have to delete later when testing is done
+gmail_send_message()

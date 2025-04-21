@@ -16,7 +16,6 @@ class TokenRequest(BaseModel):
 
 router = APIRouter()
 
-@router.post("/callback") # full path is http://localhost:3000/auth/google/callback
 @router.post("/callback")  # full path is http://localhost:3000/auth/google/callback
 async def callback(payload: TokenRequest, req: Request):
     print(f"inside callback method.")
@@ -74,3 +73,6 @@ async def callback(payload: TokenRequest, req: Request):
 
     except ValueError:
         raise HTTPException(status_code=401, detail="Invalid Google token")
+      
+      
+      
