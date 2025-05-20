@@ -1,37 +1,54 @@
 from fastapi import Request, Response, HTTPException # type: ignore
 from fastapi.encoders import jsonable_encoder # type: ignore
 from fastapi.responses import JSONResponse # type: ignore
-from backend.utils.sanitize import sanitize_user_data
-from backend.models.user_model import User
+
+from backend.models import StoreOwner, Customer
 from jose import jwt # type: ignore
 from backend.utils.token import gen_refresh_token
 from backend.utils.token import gen_access_token
 from passlib.context import CryptContext #type: ignore
 import os
 from backend.models.user_model import User
-from fastapi.security import OAuth2PasswordRequestForm
 
 
 pass_context = CryptContext(schemes="bcrypt", deprecated="auto")
 
 
-async def register(user: User):  
-  does_exist = bool(await User.find_one({
-    "$or": [
-      {"username": user.username},
-      {"email": user.email}
-    ]
-  }))
-  
-  if does_exist:
-    raise HTTPException(status_code=400, detail="Username or email already in use") 
-  
-  await User(**user.model_dump()).insert()
+async def register(user: User):
+
+  print(f"inside register : user = {user}")  # debugging log
+  try:
+    if user.account_type == "storeowner":
+      del user.account_type
+      does_exist = bool(await StoreOwner.find_one({
+        "$or": [
+          {"username": user.username},
+          {"email": user.email}
+        ]
+      }))
+      if does_exist:
+        raise HTTPException(status_code=400, detail="Username or email already in use")
+      await StoreOwner(**user.model_dump()).insert()
+    elif user.account_type == "client":
+      del user.account_type
+      does_exist = bool(await Customer.find_one({
+        "$or": [
+          {"username": user.username},
+          {"email": user.email}
+        ]
+      }))
+      if does_exist:
+        raise HTTPException(status_code=400, detail="Username or email already in use")
+      await Customer(**user.model_dump()).insert()
+  except Exception as e:
+    print(e)
+    raise HTTPException(status_code=400, detail=str(e))
     
   return {"message": "successfully created user"}
 
-async def login(login_data: OAuth2PasswordRequestForm):
+async def login(login_data):
   user = await User.find_one(User.username == login_data.username)
+  print(user)  # debugging log
   
   if not user:
     return JSONResponse(content={"message": "user not found"}, status_code=404)
@@ -80,4 +97,21 @@ async def refresh_access_token(access_token: str):
     },
     headers={"Authorization": f"Bearer {new_access_token}"}
   )
-  
+
+async def list_users():
+    users = await User.find_all().to_list()
+    return [user.dict() for user in users]
+
+async def delete_user(user_id: str):
+    user = await User.get(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    await user.delete()
+    return {"message": "User deleted successfully"}
+
+async def get_user_details(user_id: str):
+    user = await User.get(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user.dict()
+

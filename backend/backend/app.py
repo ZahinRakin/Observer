@@ -16,7 +16,7 @@ from .routes.g_auth_routes import router as g_auth_router
 
 
 # have to delete later
-from .controllers.email_controllers import gmail_send_message
+# from .controllers.email_controllers import gmail_send_message
 
 
 app = FastAPI()
@@ -38,18 +38,18 @@ app.add_middleware(
 async def startup_event():
   await connectDB()
 
-app.include_router(healthcheck_router, prefix="/api/v1/healthcheck")
-app.include_router(user_router, prefix="/api/v1/user")
-app.include_router(store_owner_router, prefix="/api/v1/storeowner")
-app.include_router(customer_router, prefix="/api/v1/customer")
-app.include_router(admin_router, prefix="/api/v1/admin")
+app.include_router(healthcheck_router, prefix="/api/v1/healthcheck", tags=["healthcheck"])
+app.include_router(user_router, prefix="/api/v1/user", tags=["user"])
+app.include_router(store_owner_router, prefix="/api/v1/storeowner", tags=["storeowner"])
+app.include_router(customer_router, prefix="/api/v1/customer", tags=["customer"])
+app.include_router(admin_router, prefix="/api/v1/admin", tags=["admin"])
 # app.include_router(store_router, prefix="/api/v1/store")this is still under consideration.
-app.include_router(product_router, prefix="/api/v1/product")
-app.include_router(news_router, prefix="/api/v1/news")
-app.include_router(notification_router, prefix="/api/v1/notification")
-app.include_router(g_auth_router, prefix="/auth/google")
+app.include_router(product_router, prefix="/api/v1/product", tags=["product"])
+app.include_router(news_router, prefix="/api/v1/news", tags=["news"])
+app.include_router(notification_router, prefix="/api/v1/notification", tags=["notification"])
+app.include_router(g_auth_router, prefix="/auth/google", tags=["auth"])
 
 
 
 # have to delete later when testing is done
-gmail_send_message()
+# gmail_send_message()

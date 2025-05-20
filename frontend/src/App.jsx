@@ -1,6 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import HomePage from "./pages/HomePage.jsx"
+import HomePage from "./pages/Home.page.jsx"
+import SignInPage from './pages/SignIn.page.jsx';
+import SignUpPage from './pages/SignUp.page.jsx';
+import ErrorPage from './pages/Error.page.jsx';
+
 
 function App() {
 
@@ -8,11 +12,16 @@ function App() {
     {
       path: '/',
       element: <HomePage />,
-    },
-    // {
-    //   path: '/about',
-    //   element: <AboutPage />,
-    // },
+      errorElement: <ErrorPage/>
+    },{
+      path: '/signin',
+      element: <SignInPage/>,
+      errorElement: <ErrorPage/>
+    },{
+      path: '/signup',
+      element: <SignUpPage/>,
+      errorElement: <ErrorPage/>
+    }
   ]);
 
   return (

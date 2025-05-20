@@ -1,14 +1,11 @@
-from beanie import Document # type:ignore
 from beanie.odm.fields import Link # type:ignore
 from typing import List, Optional
 from .store_model import Store
 from backend.models.user_model import User
+from pydantic import Field
 
 
-class StoreOwner(Document):
-  user: Link[User]
-  email_password: str
-  stores: Optional[List[Link[Store]]] = None
-  
+class StoreOwner(User):
+  stores: Optional[List[Link[Store]]] = Field(default_factory=List)
   class Settings:
     name = "storeowners"

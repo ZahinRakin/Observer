@@ -12,6 +12,7 @@ class User(Document):
   email: EmailStr
   username: str
   password: str
+  account_type: str
   avatar: Optional[str] = None
   cover_image: Optional[str] = None
   refresh_token: Optional[str] = None
@@ -29,6 +30,11 @@ class User(Document):
     self.updated_at = datetime.now(timezone.utc)
     return await super().save(*args, **kwargs)
   
+  def __init_subclass__(cls, **kwargs):
+    if cls.__name__ == "AbstractBaseModel":
+      raise TypeError("AbstractBaseModel is abstract and cannot be used directly")
+    super().__init_subclass__(**kwargs)
+  
 
   class Settings:
-    name = "users"  
+    name = None  

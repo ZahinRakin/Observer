@@ -1,21 +1,48 @@
-from fastapi import APIRouter, Depends
-from backend.middlewares.auth import get_user
+from fastapi import APIRouter, Body, Query, Depends
+from backend.models.customer_model import Customer
 from backend.models.user_model import User
-
-
 from backend.controllers.customer_controllers import (
-  subscribe,
-  unsubscribe
+    get_all_customers,
+    get_customer,
+    create_customer,
+    update_customer,
+    delete_customer,
+    subscribe,
+    unsubscribe,
+    search_products_for_customer
 )
-
+from backend.middlewares.auth import get_user
 
 router = APIRouter()
 
+@router.get("/")
+async def list_customers():
+    return await get_all_customers()
 
-@router.post("/subscribe/{product_id}")
-async def subscribe_holder(product_id: str, user: User = Depends(get_user)):
-  return await subscribe(user.id, product_id)
+@router.get("/{customer_id}")
+async def get_customer_route(customer_id: str):
+    return await get_customer(customer_id)
 
-@router.delete("/unsubscribe/{product_id}")
-async def unsub_holder(product_id: str, user: User = Depends(get_user)):
-  return await unsubscribe(product_id, user)
+@router.post("/")
+async def create_customer_route(customer: Customer = Body(...)):
+    return await create_customer(customer)
+
+@router.put("/{customer_id}")
+async def update_customer_route(customer_id: str, customer: Customer = Body(...)):
+    return await update_customer(customer_id, customer)
+
+@router.delete("/{customer_id}")
+async def delete_customer_route(customer_id: str):
+    return await delete_customer(customer_id)
+
+@router.post("/{customer_id}/subscribe/{product_id}")
+async def subscribe_route(customer_id: str, product_id: str):
+    return await subscribe(customer_id, product_id)
+
+@router.delete("/{customer_id}/unsubscribe/{product_id}")
+async def unsubscribe_route(customer_id: str, product_id: str):
+    return await unsubscribe(customer_id, product_id)
+
+@router.get("/{customer_id}/search")
+async def search_products_route(customer_id: str, query: str = Query(...)):
+    return await search_products_for_customer(customer_id, query)

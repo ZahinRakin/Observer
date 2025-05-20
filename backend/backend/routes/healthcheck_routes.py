@@ -5,5 +5,5 @@ router = APIRouter()
 
 
 @router.post("/all")
-async def do(request: Request):
+async def do():
   return await check_all()

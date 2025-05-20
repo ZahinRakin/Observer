@@ -3,14 +3,13 @@ from beanie.odm.fields import Link # type:ignore
 from datetime import datetime, timezone
 from pydantic import Field
 from typing import Optional, List
-from .customer_model import Customer
-
+from backend.models.user_model import User
 
 class Product(Document):
   name: str
   description: Optional[str] = None
   image: Optional[str] = None
-  subscribers: Optional[List[Link[Customer]]] = Field(default_factory=list)
+  subscribers: Optional[List[Link[User]]] = Field(default_factory=list)
   created_at: datetime = Field(default_factory = lambda : datetime.now(timezone.utc))
   updated_at: datetime = Field(default_factory = lambda : datetime.now(timezone.utc))
   
