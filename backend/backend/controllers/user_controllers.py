@@ -76,7 +76,7 @@ async def login(login_data):
   return res
 
 #veteran
-async def list_users():
+async def get_all_users():
   try:
     customers = await Customer.find_all().to_list()
     store_owners = await StoreOwner.find_all().to_list()
@@ -129,3 +129,11 @@ async def refresh_access_token(access_token: str):
     headers={"Authorization": f"Bearer {new_access_token}"}
   )
 
+async def update_user(user_id: str, user_data):
+    user = await User.get(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    for k, v in user_data.model_dump(exclude_unset=True).items():
+        setattr(user, k, v)
+    await user.save()
+    return user

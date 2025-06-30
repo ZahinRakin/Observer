@@ -1,19 +1,7 @@
 from fastapi import HTTPException
 from backend.models.notification_model import Notification
-from backend.models.user_model import User
-from backend.models.product_model import Product
 from typing import Optional
-from backend.utils.crud_utils import (
-    get_all_notifications as shared_get_all_notifications,
-    get_notification as shared_get_notification,
-    send_notification as shared_send_notification,
-    delete_notification as shared_delete_notification
-)
 
-get_notifications = shared_get_all_notifications
-get_notification = shared_get_notification
-send_notification = shared_send_notification
-delete_notification = shared_delete_notification
 
 async def get_notifications():
     return await Notification.find_all().to_list()
