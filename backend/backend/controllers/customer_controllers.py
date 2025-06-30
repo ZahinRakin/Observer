@@ -3,41 +3,22 @@ from backend.models.product_model import Product
 from backend.models.notification_model import Notification
 from backend.models.customer_model import Customer
 from fastapi import HTTPException
+from backend.utils.crud_utils import (
+    get_all_customers as shared_get_all_customers,
+    get_customer as shared_get_customer,
+    create_customer as shared_create_customer,
+    update_customer as shared_update_customer,
+    delete_customer as shared_delete_customer
+)
 
-
-async def get_all_customers():
-    return await Customer.find_all().to_list()
-
-async def get_customer(customer_id: str):
-    customer = await Customer.get(customer_id)
-    if not customer:
-        raise HTTPException(status_code=404, detail="Customer not found")
-    return customer
-
-async def create_customer(customer_data):
-    customer = Customer(**customer_data.model_dump())
-    await customer.insert()
-    return customer
-
-async def update_customer(customer_id: str, customer_data):
-    customer = await Customer.get(customer_id)
-    if not customer:
-        raise HTTPException(status_code=404, detail="Customer not found")
-    for k, v in customer_data.model_dump(exclude_unset=True).items():
-        setattr(customer, k, v)
-    await customer.save()
-    return customer
-
-async def delete_customer(customer_id: str):
-    customer = await Customer.get(customer_id)
-    if not customer:
-        raise HTTPException(status_code=404, detail="Customer not found")
-    await customer.delete()
-    return {"message": "Customer deleted"}
+get_all_customers = shared_get_all_customers
+get_customer = shared_get_customer
+create_customer = shared_create_customer
+update_customer = shared_update_customer
+delete_customer = shared_delete_customer
 
 async def subscribe(customer_id: str, product_id: str):
-    customer = await Customer.get(customer_id)
-    product = await Product.get(product_id)
+    customer = await get_customer(customer_id)
     if not customer or not product:
         raise HTTPException(status_code=404, detail="Customer or Product not found")
     if product not in customer.monitor_products:
@@ -49,8 +30,7 @@ async def subscribe(customer_id: str, product_id: str):
     return {"message": "Subscribed"}
 
 async def unsubscribe(customer_id: str, product_id: str):
-    customer = await Customer.get(customer_id)
-    product = await Product.get(product_id)
+    customer = await get_customer(customer_id)
     if not customer or not product:
         raise HTTPException(status_code=404, detail="Customer or Product not found")
     customer.monitor_products = [p for p in customer.monitor_products if str(p.id) != product_id]
@@ -60,7 +40,7 @@ async def unsubscribe(customer_id: str, product_id: str):
     return {"message": "Unsubscribed"}
 
 async def search_products_for_customer(customer_id: str, query: str):
-    customer = await Customer.get(customer_id)
+    customer = await get_customer(customer_id)
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
     # Simple search by product name in monitored products

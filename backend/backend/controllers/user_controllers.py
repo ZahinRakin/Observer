@@ -13,33 +13,29 @@ from backend.models.user_model import User
 
 pass_context = CryptContext(schemes="bcrypt", deprecated="auto")
 
-
+# veteran
 async def register(user: User):
-
   print(f"inside register : user = {user}")  # debugging log
   try:
+    does_exist = bool(await StoreOwner.find_one({
+      "$or": [
+        {"username": user.username},
+        {"email": user.email}
+      ]
+    })) or bool(await StoreOwner.find_one({
+      "$or": [
+        {"username": user.username},
+        {"email": user.email}
+      ]
+    }))
+    if does_exist:
+      raise HTTPException(status_code=400, detail="Username or email already in use")
+    # based on type account is created below
     if user.account_type == "storeowner":
-      del user.account_type
-      does_exist = bool(await StoreOwner.find_one({
-        "$or": [
-          {"username": user.username},
-          {"email": user.email}
-        ]
-      }))
-      if does_exist:
-        raise HTTPException(status_code=400, detail="Username or email already in use")
-      await StoreOwner(**user.model_dump()).insert()
+      await StoreOwner(**user.model_dump(exclude={"id"})).insert()
     elif user.account_type == "client":
-      del user.account_type
-      does_exist = bool(await Customer.find_one({
-        "$or": [
-          {"username": user.username},
-          {"email": user.email}
-        ]
-      }))
-      if does_exist:
-        raise HTTPException(status_code=400, detail="Username or email already in use")
-      await Customer(**user.model_dump()).insert()
+      await Customer(**user.model_dump(exclude={"id"})).insert()
+
   except Exception as e:
     print(e)
     raise HTTPException(status_code=400, detail=str(e))
@@ -47,9 +43,9 @@ async def register(user: User):
   return {"message": "successfully created user"}
 
 async def login(login_data):
-  user = await User.find_one(User.username == login_data.username)
-  print(user)  # debugging log
-  
+  user = await Customer.find_one(User.username == login_data.username)
+  if not user:
+    user = await StoreOwner.find_one(User.username == login_data.username)
   if not user:
     return JSONResponse(content={"message": "user not found"}, status_code=404)
   
@@ -79,12 +75,47 @@ async def login(login_data):
   
   return res
 
+#veteran
+async def list_users():
+  try:
+    customers = await Customer.find_all().to_list()
+    store_owners = await StoreOwner.find_all().to_list()
+    users = customers + store_owners
+    return [user.dict() for user in users]
+  except Exception as e:
+    raise HTTPException(status_code=500, detail=f"Error fetching users: {str(e)}")
+
+#veteran
+async def get_user_details(user_id: str):
+  try:
+    user = await Customer.get(user_id)
+    if not user:
+      user = await StoreOwner.get(user_id)
+    if not user:
+      raise HTTPException(status_code=404, detail="User not found")
+    return user
+  except HTTPException:
+    raise
+  except Exception as e:
+    raise HTTPException(status_code=500, detail=f"Error retrieving user details: {str(e)}")#veteran
+
+# veteran
+async def delete_user(user_id: str):
+  user = await Customer.get(user_id)
+  if not user:
+    user = await StoreOwner.get(user_id)
+  if not user:
+    raise HTTPException(status_code=404, detail="User not found")
+  return {"message": "User deleted successfully"} if await user.delete() else {"message": "Failed to delete user"}
+
+
+#test later
 async def dummy_protected_route(user):
   return {"user": user.username}
   
 async def refresh_access_token(access_token: str):
   decoded_token = jwt.get_unverified_claims(access_token)
-  
+
   user = await User.get(decoded_token.get("id"))
   if not user:
     raise HTTPException(status_code=404, detail="No user found. Is this a fabricated token?")
@@ -97,21 +128,4 @@ async def refresh_access_token(access_token: str):
     },
     headers={"Authorization": f"Bearer {new_access_token}"}
   )
-
-async def list_users():
-    users = await User.find_all().to_list()
-    return [user.dict() for user in users]
-
-async def delete_user(user_id: str):
-    user = await User.get(user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    await user.delete()
-    return {"message": "User deleted successfully"}
-
-async def get_user_details(user_id: str):
-    user = await User.get(user_id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user.dict()
 

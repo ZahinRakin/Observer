@@ -12,7 +12,7 @@ class User(Document):
   email: EmailStr
   username: str
   password: str
-  account_type: str
+  account_type: str  # "client", "storeowner".
   avatar: Optional[str] = None
   cover_image: Optional[str] = None
   refresh_token: Optional[str] = None

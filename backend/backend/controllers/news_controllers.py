@@ -1,5 +1,18 @@
 from fastapi import HTTPException
 from backend.models.news_model import News
+from backend.utils.crud_utils import (
+    get_all_news as shared_get_all_news,
+    get_news as shared_get_news,
+    create_news as shared_create_news,
+    update_news as shared_update_news,
+    delete_news as shared_delete_news
+)
+
+get_all_news = shared_get_all_news
+get_news = shared_get_news
+create_news = shared_create_news
+update_news = shared_update_news
+delete_news = shared_delete_news
 
 async def get_all_news():
     return await News.find_all().to_list()

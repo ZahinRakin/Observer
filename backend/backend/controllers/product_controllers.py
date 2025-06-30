@@ -1,5 +1,18 @@
 from fastapi import HTTPException
 from backend.models.product_model import Product
+from backend.utils.crud_utils import (
+    get_all_products as shared_get_all_products,
+    get_product as shared_get_product,
+    create_product as shared_create_product,
+    update_product as shared_update_product,
+    delete_product as shared_delete_product
+)
+
+get_all_products = shared_get_all_products
+get_product = shared_get_product
+create_product = shared_create_product
+update_product = shared_update_product
+delete_product = shared_delete_product
 
 async def get_all_products():
     return await Product.find_all().to_list()

@@ -1,25 +1,29 @@
 from fastapi import FastAPI # type: ignore
 from fastapi.middleware.cors import CORSMiddleware # type: ignore
 import os
+from backend.DB.db_connection import connect_db, disconnect_db
+from contextlib import asynccontextmanager
+from dotenv import load_dotenv
 
-from .DB.connectDB import connectDB
-
-from .routes.user_routes import router as user_router
-from .routes.store_owner_routes import router as store_owner_router
-from .routes.customer_routes import router as customer_router
-from .routes.admin_routes import router as admin_router
-from .routes.product_routes import router as product_router
-from .routes.news_routes import router as news_router
-from .routes.notification_routes import router as notification_router
-from .routes.healthcheck_routes import router as healthcheck_router
-from .routes.g_auth_routes import router as g_auth_router
-
-
-# have to delete later
-# from .controllers.email_controllers import gmail_send_message
+from backend.routes.user_routes import router as user_router
+from backend.routes.store_owner_routes import router as store_owner_router
+from backend.routes.customer_routes import router as customer_router
+from backend.routes.admin_routes import router as admin_router
+from backend.routes.product_routes import router as product_router
+from backend.routes.news_routes import router as news_router
+from backend.routes.notification_routes import router as notification_router
+from backend.routes.healthcheck_routes import router as healthcheck_router
+from backend.routes.g_auth_routes import router as g_auth_router
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    load_dotenv()
+    await connect_db()
+    yield
+    await disconnect_db()
+
+app = FastAPI(lifespan=lifespan)
 
 
 origins=[
@@ -34,10 +38,6 @@ app.add_middleware(
   allow_headers=["*"],
 )
 
-@app.on_event("startup") # from contextlib import asynccontextmanager
-async def startup_event():
-  await connectDB()
-
 app.include_router(healthcheck_router, prefix="/api/v1/healthcheck", tags=["healthcheck"])
 app.include_router(user_router, prefix="/api/v1/user", tags=["user"])
 app.include_router(store_owner_router, prefix="/api/v1/storeowner", tags=["storeowner"])
@@ -49,7 +49,3 @@ app.include_router(news_router, prefix="/api/v1/news", tags=["news"])
 app.include_router(notification_router, prefix="/api/v1/notification", tags=["notification"])
 app.include_router(g_auth_router, prefix="/auth/google", tags=["auth"])
 
-
-
-# have to delete later when testing is done
-# gmail_send_message()
