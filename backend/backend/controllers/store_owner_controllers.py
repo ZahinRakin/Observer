@@ -19,3 +19,18 @@ async def update_store_owner(store_owner_id: str, data):
     await owner.save()
     return owner
 
+async def get_stores(store_owner_id: str):
+    owner = await StoreOwner.get(store_owner_id)
+    if not owner:
+        raise HTTPException(status_code=404, detail="Store owner not found")
+    if not owner.stores:
+        return []
+    # Fetch all linked stores
+    stores = []
+    for store_link in owner.stores:
+        store = await store_link.fetch()
+        if store:
+            stores.append(store)
+    return stores
+
+    

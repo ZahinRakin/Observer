@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import LoadingAnimation from '../components/Loading';
+import { UserContext } from '../contexts/UserContext';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const SignInPage = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -10,21 +12,38 @@ const SignInPage = () => {
     password: '',
     rememberMe: false
   });
+  const [showPassword, setShowPassword] = useState(false); // Add this line
+  const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData(prevData => ({
       ...prevData,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
   const handleSignIn = async (event) => {
     setIsLoading(true)
     event.preventDefault();
-    const response = await axios.post('/api/v1/user/login', formData)
-    console.log(response) // debugging log
-    console.log('Sign-in form submitted', formData);
+    try {
+      const response = await axios.post('/api/v1/user/login', formData)
+      const user = response?.data?.user;
+      const accountType = user?.account_type;
+      setUser(user); // Set user info in context
+      if (accountType === 'admin') {
+        navigate('/admin-dashboard');
+      } else if (accountType === 'client') {
+        navigate('/customer-dashboard');
+      } else if (accountType === 'storeowner') {
+        navigate('/store-owner-dashboard');
+      } else {
+        alert('Unknown account type');
+      }
+    } catch (error) {
+      alert('Login failed');
+    }
     setIsLoading(false)
   };
 
@@ -80,15 +99,26 @@ const SignInPage = () => {
               
               <div className="space-y-2">
                 <label htmlFor="password" className="text-sm font-medium text-gray-700">Password</label>
-                <input 
-                  type="password" 
-                  id="password" 
-                  name="password" 
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors" 
-                  required 
-                />
+                <div className="relative">
+                  <input 
+                    type={showPassword ? "text" : "password"}
+                    id="password" 
+                    name="password" 
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors pr-10" 
+                    required 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 focus:outline-none"
+                    tabIndex={-1}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                  </button>
+                </div>
               </div>
               
               <div className="flex items-center justify-between">

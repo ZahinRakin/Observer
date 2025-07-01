@@ -88,11 +88,13 @@ async def login(login_data):
         "message": "Login successful",
         "user": {
           "id": str(user.id),
+          "fname": user.fname,
+          "lname": user.lname,
           "username": user.username,
           "email": user.email,
           "account_type": user.account_type,
-          "fname": user.fname,
-          "lname": user.lname
+          "avatar": user.avatar,
+          "cover_image": user.cover_image
         }
       },
       headers={"Authorization": f"Bearer {access_token}"}

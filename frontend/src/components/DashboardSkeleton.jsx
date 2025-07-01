@@ -4,7 +4,7 @@ import React from 'react';
  * DashboardSkeleton - Common layout for admin and customer dashboards
  * Usage: Wrap your dashboard pages with this skeleton
  */
-const DashboardSkeleton = ({ sidebar, header, children }) => {
+const DashboardSkeleton = ({ sidebar, header, children, footer }) => {
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -20,6 +20,12 @@ const DashboardSkeleton = ({ sidebar, header, children }) => {
         <main className="flex-1 p-6">
           {children}
         </main>
+        {/* Footer */}
+        {footer && (
+          <footer className="bg-white shadow px-4 py-3 text-center text-gray-500 text-sm">
+            {footer}
+          </footer>
+        )}
       </div>
     </div>
   );
