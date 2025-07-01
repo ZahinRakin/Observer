@@ -21,7 +21,6 @@ class LoginData(BaseModel):
   rememberMe: bool
 
 
-
 @router.get("/")
 async def list_users_route():
   return await list_users()
@@ -29,10 +28,6 @@ async def list_users_route():
 @router.post("/")
 async def user_register(user: User):
   return await register(user)
-
-@router.delete("/{user_id}")
-async def delete_user_route(user_id: str):
-  return await delete_user(user_id)
 
 @router.get("/{user_id}")
 async def get_user_details_route(user_id: str):
@@ -42,6 +37,10 @@ async def get_user_details_route(user_id: str):
 async def update_user(user_id: str, user_data: User):
   from backend.controllers.user_controllers import update_user
   return await update_user(user_id, user_data)
+
+@router.delete("/{user_id}")
+async def delete_user_route(user_id: str):
+  return await delete_user(user_id)
   
 @router.post("/login")
 async def login_user(login_data: LoginData):

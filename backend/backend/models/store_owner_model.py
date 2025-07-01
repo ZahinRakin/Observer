@@ -6,6 +6,6 @@ from pydantic import Field
 
 
 class StoreOwner(User):
-  stores: Optional[List[Link[Store]]] = Field(default_factory=List)
+  stores: Optional[List[Link[Store]]] = Field(default_factory=list)
   class Settings:
     name = "storeowners"

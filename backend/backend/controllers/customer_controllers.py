@@ -12,12 +12,8 @@ async def notifiy_me(product_id: str, user_id: str, title: str, description: str
 
 async def get_customer(customer_id: str):
     customer = await Customer.get(customer_id)
-    if not customer:
-        raise HTTPException(status_code=404, detail="Customer not found")
     return customer
 
 async def get_all_customers():
   customers = await Customer.find_all().to_list()
-  if not customers:
-    raise HTTPException(status_code=404, detail="No customers found")
   return customers

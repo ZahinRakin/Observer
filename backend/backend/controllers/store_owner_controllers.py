@@ -8,8 +8,6 @@ async def get_store_owners():
 
 async def get_store_owner(store_owner_id: str):
     owner = await StoreOwner.get(store_owner_id)
-    if not owner:
-        raise HTTPException(status_code=404, detail="Store owner not found")
     return owner
 
 async def update_store_owner(store_owner_id: str, data):

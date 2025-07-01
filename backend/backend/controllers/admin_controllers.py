@@ -7,8 +7,6 @@ async def get_all_admins():
 
 async def get_admin(admin_id: str):
     admin = await Admin.get(admin_id)
-    if not admin:
-        raise HTTPException(status_code=404, detail="Admin not found")
     return admin
 
 async def create_admin(admin_data):
@@ -19,7 +17,7 @@ async def create_admin(admin_data):
 async def update_admin(admin_id: str, admin_data):
     admin = await Admin.get(admin_id)
     if not admin:
-        raise HTTPException(status_code=404, detail="Admin not found")
+        return None
     for k, v in admin_data.model_dump(exclude_unset=True).items():
         setattr(admin, k, v)
     await admin.save()
@@ -28,6 +26,6 @@ async def update_admin(admin_id: str, admin_data):
 async def delete_admin(admin_id: str):
     admin = await Admin.get(admin_id)
     if not admin:
-        raise HTTPException(status_code=404, detail="Admin not found")
+        return None
     await admin.delete()
     return {"message": "Admin deleted"}
