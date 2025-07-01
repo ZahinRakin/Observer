@@ -4,7 +4,7 @@ import React from 'react';
  * ProductCard - Card component to display a single product
  * Props: product (object with fields: name, description, image, category, tags)
  */
-const ProductCard = ({ product, onDelete, onUpdate, onPublishNews }) => {
+const ProductCard = ({ product, onDelete, onUpdate, onPublishNews, onViewAllNews }) => {
   const handleDelete = () => {
     if (onDelete) onDelete(product);
   };
@@ -13,6 +13,9 @@ const ProductCard = ({ product, onDelete, onUpdate, onPublishNews }) => {
   };
   const handlePublishNews = () => {
     if (onPublishNews) onPublishNews(product);
+  };
+  const handleViewAllNews = () => {
+    if (onViewAllNews) onViewAllNews(product);
   };
 
   return (
@@ -34,6 +37,7 @@ const ProductCard = ({ product, onDelete, onUpdate, onPublishNews }) => {
         <button onClick={handleDelete} className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm">Delete</button>
         <button onClick={handleUpdate} className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm">Update</button>
         <button onClick={handlePublishNews} className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">Publish News</button>
+        <button onClick={handleViewAllNews} className="px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600 text-sm">View All News</button>
       </div>
     </div>
   );

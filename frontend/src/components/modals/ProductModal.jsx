@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from '../cards/ProductCard';
+import ProductFormModal from '../modals/ProductFormModal';
+import NewsFormModal from '../modals/NewsFormModal';
+import NewsCardModal from '../modals/NewsCardModal';
 
 const dummyProducts = [
   {
@@ -25,67 +28,135 @@ const dummyProducts = [
   },
 ];
 
-const ProductModal = ({ open, onClose, store, products }) => {
-  // Always get products from store.products if available, else from propProducts, else dummyProducts
+const ProductModal = ({ open, onClose, store, products: PRODUCTS, onUpdateProduct, onPublishNews }) => {
+  const [products, setProducts] = useState([]);
+  const [showNewsModal, setShowNewsModal] = useState(false);
+  const [newsProduct, setNewsProduct] = useState(null);
+  const [showNewsCardModal, setShowNewsCardModal] = useState(false);
+  const [newsCardProduct, setNewsCardProduct] = useState(null);
 
-  const [products, setProducts] = useState(
-    products || dummyProducts 
-  );
+  // Dummy news for demo
+  const dummyNews = [
+    {
+      id: 1,
+      title: 'Grand Opening!',
+      description: 'We are excited to announce the grand opening of our new store!',
+      created_at: new Date('2025-06-01T10:00:00Z'),
+      updated_at: new Date('2025-06-01T10:00:00Z'),
+    },
+    {
+      id: 2,
+      title: 'Fresh Products Arrived',
+      description: 'Check out our latest batch of organic honey and goat milk.',
+      created_at: new Date('2025-06-15T12:30:00Z'),
+      updated_at: new Date('2025-06-15T12:30:00Z'),
+    },
+  ];
 
   useEffect(() => {
-    if (products) {
-      setProducts(products);
+    if (PRODUCTS?.length) {
+      setProducts(PRODUCTS);
     } else {
       setProducts(dummyProducts);
     }
-  }, [productsFromStore, propProducts, open]);
+  }, [open, PRODUCTS]);
 
-  if (!open) return null;
+  if (!open && !showNewsModal && !showNewsCardModal) return null;
 
-  // Handler stubs
   const handleDelete = (product) => {
     setProducts((prev) => prev.filter((p) => p !== product));
   };
+
   const handleUpdate = (product) => {
-    setProducts((prev) =>
-      prev.map((p) =>
-        p === product ? { ...p, name: p.name + ' (Updated)' } : p
-      )
-    );
+    if (onUpdateProduct) {
+      onUpdateProduct(product);
+    }
   };
+
   const handlePublishNews = (product) => {
-    alert(`Publish news for: ${product.name}`);
+    if (onPublishNews) {
+      onPublishNews(product);
+    } else {
+      setNewsProduct(product);
+      setShowNewsModal(true);
+    }
+  };
+
+  const handleNewsSubmit = (newsData) => {
+    // TODO: Integrate with backend or update state as needed
+    setShowNewsModal(false);
+    setNewsProduct(null);
+    // Optionally show a success message or update product/news state
+  };
+
+  const handleNewsGoBack = () => {
+    setShowNewsModal(false);
+    setNewsProduct(null);
+  };
+
+  const handleNewsCancel = () => {
+    setShowNewsModal(false);
+    setNewsProduct(null);
+  };
+
+  const handleViewAllNews = (product) => {
+    setShowNewsCardModal(true);
+    setNewsCardProduct(product);
+  };
+
+  const handleCloseNewsCardModal = () => {
+    setShowNewsCardModal(false);
+    setNewsCardProduct(null);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/10">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative max-h-[90vh] overflow-y-auto">
-        <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold"
-          onClick={onClose}
-        >
-          &times;
-        </button>
-        <h2 className="text-2xl font-semibold mb-4">
-          Products for {store?.name}
-        </h2>
-        <div>
-          {products && products.length > 0 ? (
-            products.map((product, idx) => (
-              <ProductCard
-                key={idx}
-                product={product}
-                onDelete={handleDelete}
-                onUpdate={handleUpdate}
-                onPublishNews={handlePublishNews}
-              />
-            ))
-          ) : (
-            <div className="text-gray-400 text-center">No products found.</div>
-          )}
+    <>
+      <NewsFormModal
+        open={showNewsModal}
+        onClose={handleNewsCancel}
+        productId={newsProduct?.id}
+        news={null}
+        onSubmit={handleNewsSubmit}
+        onGoBack={handleNewsGoBack}
+        onCancel={handleNewsCancel}
+      />
+      <NewsCardModal
+        open={showNewsCardModal}
+        onClose={handleCloseNewsCardModal}
+        newsList={dummyNews}
+      />
+      {!showNewsModal && !showNewsCardModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/10">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative max-h-[90vh] overflow-y-auto">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold"
+              onClick={onClose}
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-semibold mb-4">
+              Products for {store?.name}
+            </h2>
+            <div>
+              {products && products.length > 0 ? (
+                products.map((product, idx) => (
+                  <ProductCard
+                    key={idx}
+                    product={product}
+                    onDelete={handleDelete}
+                    onUpdate={handleUpdate}
+                    onPublishNews={handlePublishNews}
+                    onViewAllNews={handleViewAllNews}
+                  />
+                ))
+              ) : (
+                <div className="text-gray-400 text-center">No products found.</div>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
