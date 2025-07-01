@@ -1,21 +1,23 @@
-from backend.models.user_model import User
 from backend.models.customer_model import Customer
 from fastapi import HTTPException
-
+from backend.controllers.notification_controllers import send_notification
 
 async def notifiy_me(product_id: str, user_id: str, title: str, description: str):
-  try:
-    await Notification(
-      product=product_id,
-      receiver=user_id,
-      title=title,
-      description=description
-    ).insert()
-  except Exception as e:
-    print(f"inside notifyme. Error: {e}")
+  from backend.controllers.user_controllers import get_user_details
+  from backend.controllers.product_controllers import get_product
+
+  user = await get_user_details(user_id)
+  product = await get_product(product_id)
+  return await send_notification(product._id, user._id, title, description)
 
 async def get_customer(customer_id: str):
     customer = await Customer.get(customer_id)
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
     return customer
+
+async def get_all_customers():
+  customers = await Customer.find_all().to_list()
+  if not customers:
+    raise HTTPException(status_code=404, detail="No customers found")
+  return customers

@@ -1,12 +1,14 @@
-from fastapi import Request, Response, HTTPException # type: ignore
-from fastapi.encoders import jsonable_encoder # type: ignore
-from fastapi.responses import JSONResponse # type: ignore
+from fastapi import Request, Response, HTTPException 
+from fastapi.encoders import jsonable_encoder 
+from fastapi.responses import JSONResponse 
 
+from backend.controllers.customer_controllers import get_customer
+from backend.controllers.store_owner_controllers import get_store_owner
 from backend.models import StoreOwner, Customer
-from jose import jwt # type: ignore
+from jose import jwt 
 from backend.utils.token import gen_refresh_token
 from backend.utils.token import gen_access_token
-from passlib.context import CryptContext #type: ignore
+from passlib.context import CryptContext
 import os
 from backend.models.user_model import User
 
@@ -58,6 +60,9 @@ async def login(login_data):
   user.refresh_token = refresh_token
   await user.save()
   
+  max_age = int(os.getenv("COOKIE_MAX_AGE", "3600"))
+  secure = os.getenv("ENVIRONMENT", "development") == "production"
+
   res = JSONResponse(
     content={
       "message": "login successful"
@@ -65,18 +70,18 @@ async def login(login_data):
     headers={"Authorization": f"Bearer {access_token}"}
   )
   res.set_cookie(
-    key = "refreshToken",
-    value = refresh_token,
-    httponly = True,
-    secure = os.getenv("ENVIRONMENT") == "production",
-    samesite = "Lax",
-    max_age = int(os.getenv("COOKIE_MAX_AGE"))
+    key="refreshToken",
+    value=refresh_token,
+    httponly=True,
+    secure=secure,
+    samesite="lax",
+    max_age=max_age
   )
   
   return res
 
 #veteran
-async def get_all_users():
+async def list_users():
   try:
     customers = await Customer.find_all().to_list()
     store_owners = await StoreOwner.find_all().to_list()
@@ -84,20 +89,6 @@ async def get_all_users():
     return [user.dict() for user in users]
   except Exception as e:
     raise HTTPException(status_code=500, detail=f"Error fetching users: {str(e)}")
-
-#veteran
-async def get_user_details(user_id: str):
-  try:
-    user = await Customer.get(user_id)
-    if not user:
-      user = await StoreOwner.get(user_id)
-    if not user:
-      raise HTTPException(status_code=404, detail="User not found")
-    return user
-  except HTTPException:
-    raise
-  except Exception as e:
-    raise HTTPException(status_code=500, detail=f"Error retrieving user details: {str(e)}")#veteran
 
 # veteran
 async def delete_user(user_id: str):
@@ -137,3 +128,11 @@ async def update_user(user_id: str, user_data):
         setattr(user, k, v)
     await user.save()
     return user
+
+async def get_user_details(user_id: str):
+  user = await get_customer(user_id)
+  if not user:
+    user = await get_store_owner(user_id)
+  if not user:
+    raise HTTPException(status_code=404, detail="User not found")
+  return user

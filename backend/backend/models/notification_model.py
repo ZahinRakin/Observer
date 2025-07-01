@@ -12,6 +12,7 @@ class Notification(Document):
   receiver: Link[User]
   title: str
   description: str
+  read: bool = Field(default=False)
   created_at: datetime = Field(default_factory = lambda : datetime.now(timezone.utc))
   updated_at: datetime = Field(default_factory = lambda : datetime.now(timezone.utc))
   

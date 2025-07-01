@@ -12,16 +12,23 @@ async def get_notification(notification_id: str):
         raise HTTPException(status_code=404, detail="Notification not found")
     return notification
 
-async def send_notification(notification_data):
-    notification = Notification(**notification_data.model_dump())
-    await notification.insert()
+async def send_notification(product_id , user_id, title: str, description: str):
+    try:
+        notification = await Notification(
+            product=product_id,
+            receiver=user_id,
+            title=title,
+            description=description
+        ).insert()
+    except Exception as e:
+        print(f"inside notifyme. Error: {e}")
     return notification
 
 async def mark_notification_read(notification_id: str):
     notification = await get_notification(notification_id)
-    # Example: add a 'read' field if not present
-    if not hasattr(notification, 'read'):
-        setattr(notification, 'read', True)
+  
+    if not notification.read:
+        notification.read = True
     else:
         notification.read = True
     await notification.save()

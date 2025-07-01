@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from backend.models.product_model import Product
-from backend.controllers.customer_controllers.py import get_customer
+
 
 async def get_all_products():
     return await Product.find_all().to_list()
@@ -40,26 +40,42 @@ async def search_product(query: str):
     return products
 
 async def subscribe(customer_id: str, product_id: str):
+    from backend.controllers.customer_controllers import get_customer
     customer = await get_customer(customer_id)
     product = await get_product(product_id)
     if not customer or not product:
         raise HTTPException(status_code=404, detail="Customer or Product not found")
+
+    # Ensure lists are initialized
+    if customer.monitor_products is None:
+        customer.monitor_products = []
+    if product.subscribers is None:
+        product.subscribers = []
+
     if product not in customer.monitor_products:
-        customer.monitor_products.append(product)
+        customer.monitor_products.append(product._id)
         await customer.save()
     if customer not in product.subscribers:
-        product.subscribers.append(customer)
+        product.subscribers.append(customer._id)
         await product.save()
     return {"message": "Subscribed"}
 
 async def unsubscribe(customer_id: str, product_id: str):
+    from backend.controllers.customer_controllers import get_customer
     customer = await get_customer(customer_id)
     product = await get_product(product_id)
     if not customer or not product:
         raise HTTPException(status_code=404, detail="Customer or Product not found")
-    customer.monitor_products = [p for p in customer.monitor_products if str(p.id) != product_id]
+
+    if customer.monitor_products is None:
+        customer.monitor_products = []
+    if product.subscribers is None:
+        product.subscribers = []
+
+    # Remove by id
+    customer.monitor_products = [p for p in customer.monitor_products if str(p.ref.id) != product_id]
     await customer.save()
-    product.subscribers = [u for u in product.subscribers if str(u.id) != customer_id]
+    product.subscribers = [u for u in product.subscribers if str(u.ref.id) != customer_id]
     await product.save()
     return {"message": "Unsubscribed"}
 
