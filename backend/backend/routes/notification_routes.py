@@ -14,19 +14,21 @@ router = APIRouter()
 async def list_notifications():
     return await get_notifications()
 
-@router.get("/{notification_id}")
-async def get_notification_route(notification_id: str):
-    return await get_notification(notification_id)
+@router.get("/download-notification-sound")
+async def notification_sound_route():
+    return await get_notification_sound()
 
 @router.post("/send")
 async def send_notification_route(notification: Notification = Body(...)):
     return await send_notification(notification)
 
+@router.get("/{notification_id}")
+async def get_notification_route(notification_id: str):
+    return await get_notification(notification_id)
+
 @router.put("/{notification_id}/mark-read")
 async def mark_read_route(notification_id: str):
     return await mark_notification_read(notification_id)
 
-@router.get("/sound/{notification_id}")
-async def notification_sound_route(notification_id: str):
-    return await get_notification_sound(notification_id)
+
 

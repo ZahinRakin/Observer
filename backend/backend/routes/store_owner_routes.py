@@ -13,10 +13,10 @@ async def list_store_owners():
     return await get_store_owners()
 
 @router.get("/{store_owner_id}")
-async def get_store_owner_route(store_owner_id: str):
+async def get_storeowner(store_owner_id: str):
     return await get_store_owner(store_owner_id)
 
-@router.put("/{store_owner_id}")
-async def update_store_owner_route(store_owner_id: str, store_owner: StoreOwner = Body(...)):
-    return await update_store_owner(store_owner_id, store_owner)
+# @router.put("/{store_owner_id}")
+# async def update_store_owner_route(store_owner_id: str, store_owner: StoreOwner = Body(...)):
+#     return await update_store_owner(store_owner_id, store_owner)
 

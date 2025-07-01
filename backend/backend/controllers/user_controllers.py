@@ -54,7 +54,7 @@ async def register(user: User):
     raise HTTPException(status_code=400, detail=str(e))
     
   return {"message": "successfully created user"}
-
+# veteran
 async def login(login_data):
   try:
     # Find user across all collections
@@ -139,10 +139,10 @@ async def delete_user(user_id: str):
   return {"message": "User deleted successfully"} if await user.delete() else {"message": "Failed to delete user"}
 
 
-#test later
+# test later
 async def dummy_protected_route(user):
   return {"user": user.username}
-  
+# test later
 async def refresh_access_token(access_token: str):
   decoded_token = jwt.get_unverified_claims(access_token)
 

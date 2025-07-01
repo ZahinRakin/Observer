@@ -11,23 +11,51 @@ async def get_news(news_id: str):
     return news
 
 async def create_news(news_data):
-    news = News(**news_data.model_dump())
-    await news.insert()
-    return news
+    try:
+        news = News(**news_data.model_dump())
+        await news.insert()
+        return news
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error creating news: {str(e)}")
 
 async def update_news(news_id: str, news_data):
-    news = await News.get(news_id)
-    if not news:
-        raise HTTPException(status_code=404, detail="News not found")
-    for k, v in news_data.model_dump(exclude_unset=True).items():
-        setattr(news, k, v)
-    await news.save()
-    return news
+    try:
+        # Get the existing news
+        news = await News.get(news_id)
+        if not news:
+            raise HTTPException(status_code=404, detail="News not found")
+        
+        # Get only the fields that were explicitly set in the request
+        update_data = news_data.model_dump(exclude_unset=True)
+        
+        # Validate that we have at least one field to update
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No fields provided for update")
+        
+        # Update only the provided fields
+        for field_name, field_value in update_data.items():
+            setattr(news, field_name, field_value)
+        
+        # Save the updated news
+        await news.save()
+        return news
+        
+    except HTTPException:
+        # Re-raise HTTPExceptions (like 404, 400)
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error updating news: {str(e)}")
 
 async def delete_news(news_id: str):
-    news = await News.get(news_id)
-    if not news:
-        raise HTTPException(status_code=404, detail="News not found")
-    await news.delete()
-    return {"message": "News deleted"}
+    try:
+        news = await News.get(news_id)
+        if not news:
+            raise HTTPException(status_code=404, detail="News not found")
+        await news.delete()
+        return {"message": "News deleted successfully"}
+    except HTTPException:
+        # Re-raise HTTPExceptions (like 404)
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting news: {str(e)}")
 
