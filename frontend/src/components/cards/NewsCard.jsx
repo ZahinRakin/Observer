@@ -9,7 +9,11 @@ const formatDate = (date) => {
 
 const NewsCard = ({ news, onDelete, onUpdate, onMarkAsSeen }) => {
   const { user } = useUser();
-  const isStoreOwner = user?.role === 'store_owner';
+  const isStoreOwner = 
+    user?.role === 'storeowner' || 
+    user?.account_type === 'storeowner' ||
+    user?.role === 'store_owner' ||
+    user?.account_type === 'store_owner';
 
   const buttonConfigs = {
     delete: {

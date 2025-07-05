@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../../contexts/UserContext.jsx';
 import ProductCard from '../cards/ProductCard';
 import ProductFormModal from '../modals/ProductFormModal';
 import NewsFormModal from '../modals/NewsFormModal';
@@ -29,6 +30,7 @@ const dummyProducts = [
 ];
 
 const ProductModal = ({ open, onClose, store, products: PRODUCTS, onUpdateProduct, onPublishNews }) => {
+  const { user } = useContext(UserContext);
   const [products, setProducts] = useState([]);
   const [showNewsModal, setShowNewsModal] = useState(false);
   const [newsProduct, setNewsProduct] = useState(null);
@@ -147,7 +149,6 @@ const ProductModal = ({ open, onClose, store, products: PRODUCTS, onUpdateProduc
                     onUpdate={handleUpdate}
                     onPublishNews={handlePublishNews}
                     onViewAllNews={handleViewAllNews}
-                    isSubscribed={false}
                   />
                 ))
               ) : (

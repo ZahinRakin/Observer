@@ -21,7 +21,17 @@ const ProductCard = ({
   const [isUnsubscribing, setIsUnsubscribing] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [showNewsModal, setShowNewsModal] = useState(false);
-  const isStoreOwner = user?.role === 'store_owner';
+  const isStoreOwner = 
+    user?.role === 'storeowner' || 
+    user?.account_type === 'storeowner' ||
+    user?.role === 'store_owner' ||
+    user?.account_type === 'store_owner';
+
+  // Debug: Log user object to see its structure
+  console.log('ProductCard - User object:', user);
+  console.log('ProductCard - User role:', user?.role);
+  console.log('ProductCard - User account_type:', user?.account_type);
+  console.log('ProductCard - isStoreOwner:', isStoreOwner);
 
   const handleUnsubscribe = async () => {
     setIsUnsubscribing(true);
@@ -76,21 +86,21 @@ const ProductCard = ({
       text: 'View All News',
       color: 'purple',
       onClick: () => setShowNewsModal(true),
-      visible: !isStoreOwner && isSubscribed // Only show to customers who are subscribed
+      visible: isStoreOwner || (!isStoreOwner && isSubscribed)
     },
     subscribe: {
       id: 'product-subscribe-btn',
       text: isSubscribing ? 'Subscribing...' : 'Subscribe',
       color: isSubscribing ? 'gray' : 'green',
       onClick: handleSubscribe,
-      visible: !isStoreOwner && !isSubscribed // Only show to customers who are not subscribed
+      visible: !isStoreOwner && !isSubscribed
     },
     unsubscribe: {
       id: 'product-unsubscribe-btn',
       text: isUnsubscribing ? 'Processing...' : 'Unsubscribe',
       color: isUnsubscribing ? 'gray' : 'red',
       onClick: handleUnsubscribe,
-      visible: !isStoreOwner && isSubscribed // Only show to customers who are subscribed
+      visible: !isStoreOwner && isSubscribed
     }
   };
 
@@ -157,8 +167,8 @@ const ProductCard = ({
         ))}
       </div>
 
-      {/* News Modal - Only show if subscribed */}
-      {showNewsModal && isSubscribed && (
+      {/* News Modal - Show to store owners or subscribed customers */}
+      {showNewsModal && (isStoreOwner || isSubscribed) && (
         <NewsCardModal 
           open={showNewsModal}
           onClose={() => setShowNewsModal(false)}

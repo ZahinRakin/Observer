@@ -7,7 +7,7 @@ import NewsFormModal from '../modals/NewsFormModal';
  * StoreCard - Card component to display a single store
  * Props: store (object with fields: name, description, image, location, phone, email, website, facebook, instagram)
  */
-const StoreCard = ({ store, onDelete, onUpdate }) => {
+const StoreCard = ({ store, onDelete, onUpdate, onViewProducts }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [products, setProducts] = useState(store.products || []);
   const [deleted, setDeleted] = useState(false);
@@ -169,7 +169,16 @@ const StoreCard = ({ store, onDelete, onUpdate }) => {
             </a>
           )}
         </div>
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-2 mt-4 flex-wrap">
+          {onViewProducts && (
+            <button
+              type="button"
+              onClick={e => { e.stopPropagation(); onViewProducts(storeState); }}
+              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+            >
+              View Products
+            </button>
+          )}
           <button
             onClick={handleUpdate}
             className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm"
