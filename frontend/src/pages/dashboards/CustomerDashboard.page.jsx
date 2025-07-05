@@ -1,15 +1,15 @@
 import React, { useContext, useState } from 'react';
-import DashboardSkeleton from '../components/DashboardSkeleton.jsx';
-import { UserContext } from '../contexts/UserContext.jsx'; 
+import DashboardSkeleton from '../../components/DashboardSkeleton.jsx';
+import { UserContext } from '../../contexts/UserContext.jsx'; 
 // import NewsCard from '../components/cards/NewsCard.jsx';
 // import LoadingAnimation from '../components/Loading.jsx';
-import ProfilePage from './ProfilePage.jsx';
-import CustomerSidebar from '../components/customer/CustomerSidebar.jsx';
-import CustomerHeader from '../components/customer/CustomerHeader.jsx';
-import CustomerFooter from '../components/customer/CustomerFooter.jsx';
-import RenderDashboard from '../components/customer/CustomerRenderDashboard.jsx';
-import RenderNews from '../components/customer/CustomerRenderNews.jsx';
-import RenderProducts from '../components/customer/CustomerRenderProducts.jsx';
+import ProfilePage from '../ProfilePage.jsx';
+import CustomerSidebar from '../../components/customer/CustomerSidebar.jsx';
+import CustomerHeader from '../../components/customer/CustomerHeader.jsx';
+import CustomerFooter from '../../components/customer/CustomerFooter.jsx';
+import RenderDashboard from '../../components/customer/CustomerRenderDashboard.jsx';
+import RenderNews from '../../components/customer/CustomerRenderNews.jsx';
+import RenderProducts from '../../components/customer/CustomerRenderProducts.jsx';
 
 
 const CustomerDashboard = () => {

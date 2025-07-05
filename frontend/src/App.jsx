@@ -4,9 +4,9 @@ import HomePage from "./pages/Home.page.jsx"
 import SignInPage from './pages/SignIn.page.jsx';
 import SignUpPage from './pages/SignUp.page.jsx';
 import ErrorPage from './pages/Error.page.jsx';
-import AdminDashboard from './pages/AdminDashboard.page.jsx';
-import CustomerDashboard from './pages/CustomerDashboard.page.jsx';
-import StoreOwnerDashboard from './pages/StoreOwnerDashboard.page.jsx';
+import AdminDashboard from './pages/dashboards/AdminDashboard.page.jsx';
+import CustomerDashboard from './pages/dashboards/CustomerDashboard.page.jsx';
+import StoreOwnerDashboard from './pages/dashboards/StoreOwnerDashboard.page.jsx';
 import HelpSupportPage from './pages/HelpSupport.page.jsx';
 
 function App() {

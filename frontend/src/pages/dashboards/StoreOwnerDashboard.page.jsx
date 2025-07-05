@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react';
-import DashboardSkeleton from '../components/DashboardSkeleton.jsx';
-import { UserContext } from '../contexts/UserContext.jsx';
-import ProfilePage from './ProfilePage.jsx';
-import StoreOwnerSidebar from '../components/storeowner/StoreOwnerSidebar.jsx';
-import StoreOwnerHeader from '../components/storeowner/StoreOwnerHeader.jsx';
-import StoreOwnerFooter from '../components/storeowner/StoreOwnerFooter.jsx';
-import StoreOwnerRenderDashboard from '../components/storeowner/StoreOwnerRenderDashboard.jsx';
-import StoreOwnerRenderStores from '../components/storeowner/StoreOwnerRenderStores.jsx';
-import StoreOwnerTestConnection from '../components/storeowner/StoreOwnerTestConnection.jsx';
+import DashboardSkeleton from '../../components/DashboardSkeleton.jsx';
+import { UserContext } from '../../contexts/UserContext.jsx';
+import ProfilePage from '../ProfilePage.jsx';
+import StoreOwnerSidebar from '../../components/storeowner/StoreOwnerSidebar.jsx';
+import StoreOwnerHeader from '../../components/storeowner/StoreOwnerHeader.jsx';
+import StoreOwnerFooter from '../../components/storeowner/StoreOwnerFooter.jsx';
+import StoreOwnerRenderDashboard from '../../components/storeowner/StoreOwnerRenderDashboard.jsx';
+import StoreOwnerRenderStores from '../../components/storeowner/StoreOwnerRenderStores.jsx';
+import StoreOwnerTestConnection from '../../components/storeowner/StoreOwnerTestConnection.jsx';
 
 const StoreOwnerDashboard = () => {
   const { user } = useContext(UserContext);
