@@ -79,16 +79,16 @@ const NewsCardModal = ({
         productId={productId}
       />
       
-      <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/10">
-        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/50">
+        <div className="bg-gray-800/90 rounded-xl shadow-2xl p-6 w-full max-w-2xl relative max-h-[90vh] overflow-y-auto border border-gray-700/50">
           <button
-            className="absolute top-2 left-2 text-gray-500 hover:text-gray-700 text-xl font-bold"
+            className="absolute top-4 left-4 text-gray-400 hover:text-gray-200 text-xl font-bold transition-colors duration-200"
             onClick={onClose}
           >
             &#8592; Back
           </button>
           
-          <h2 className="text-2xl font-semibold mb-4 text-center">Product News</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-center bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Product News</h2>
           
           {isStoreOwner && (
             <button
@@ -96,7 +96,7 @@ const NewsCardModal = ({
                 setEditingNews(null);
                 setShowNewsForm(true);
               }}
-              className="mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              className="mb-4 px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg font-medium"
             >
               Create New News
             </button>
@@ -113,7 +113,7 @@ const NewsCardModal = ({
                 />
               ))
             ) : (
-              <div className="text-gray-400 text-center">No news found for this product.</div>
+              <div className="text-gray-400 text-center py-8">No news found for this product.</div>
             )}
           </div>
         </div>

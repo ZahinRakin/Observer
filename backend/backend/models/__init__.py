@@ -7,6 +7,8 @@ from .notification_model import Notification
 from .product_model import Product
 from .store_owner_model import StoreOwner
 from .store_model import Store
+from .settings_model import SystemSettings
+from .activity_log_model import ActivityLog
 
 DOCUMENT_MODELS = [
   User,
@@ -18,4 +20,6 @@ DOCUMENT_MODELS = [
   Product,
   StoreOwner,
   Store,
+  SystemSettings,
+  ActivityLog,
 ]

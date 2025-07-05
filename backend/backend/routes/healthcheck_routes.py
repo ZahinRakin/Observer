@@ -4,6 +4,6 @@ from backend.controllers.healthcheck_controllers import check_all
 router = APIRouter()
 
 
-@router.post("/all")
+@router.get("/")
 async def do():
   return await check_all()

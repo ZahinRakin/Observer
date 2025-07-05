@@ -40,9 +40,9 @@ const NewsCard = ({ news, onDelete, onUpdate, onMarkAsSeen }) => {
   };
 
   return (
-    <div className="bg-gray-50 rounded shadow p-4 flex flex-col gap-2">
-      <h3 className="text-lg font-semibold text-gray-800">{news.title}</h3>
-      <p className="text-gray-600 mb-2">{news.description}</p>
+    <div className="bg-gray-800/50 rounded-xl shadow-lg p-6 flex flex-col gap-3 border border-gray-700/50 backdrop-blur-sm">
+      <h3 className="text-lg font-semibold text-gray-200">{news.title}</h3>
+      <p className="text-gray-400 mb-2">{news.description}</p>
       
       <div className="text-xs text-gray-500 flex gap-4">
         <span>Created: {formatDate(news.created_at)}</span>
@@ -56,7 +56,7 @@ const NewsCard = ({ news, onDelete, onUpdate, onMarkAsSeen }) => {
               key={key}
               id={config.id}
               onClick={config.onClick}
-              className={`px-3 py-1 bg-${config.color}-500 text-white rounded hover:bg-${config.color}-600 text-sm`}
+              className={`px-4 py-2 bg-gradient-to-r from-${config.color}-600 to-${config.color}-700 text-white rounded-lg hover:from-${config.color}-700 hover:to-${config.color}-800 text-sm font-medium transition-all duration-200 shadow-lg`}
             >
               {config.text}
             </button>

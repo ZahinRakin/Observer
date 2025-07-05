@@ -7,6 +7,7 @@ import StoreOwnerHeader from '../components/storeowner/StoreOwnerHeader.jsx';
 import StoreOwnerFooter from '../components/storeowner/StoreOwnerFooter.jsx';
 import StoreOwnerRenderDashboard from '../components/storeowner/StoreOwnerRenderDashboard.jsx';
 import StoreOwnerRenderStores from '../components/storeowner/StoreOwnerRenderStores.jsx';
+import StoreOwnerTestConnection from '../components/storeowner/StoreOwnerTestConnection.jsx';
 
 const StoreOwnerDashboard = () => {
   const { user } = useContext(UserContext);
@@ -23,8 +24,13 @@ const StoreOwnerDashboard = () => {
         editMode={editProfileMode}
       />
     );
-  } else if (activeTab === 'dashboard') content = <StoreOwnerRenderDashboard user={user} />;
-  else if (activeTab === 'stores') content = <StoreOwnerRenderStores user={user} />;
+  } else if (activeTab === 'dashboard') {
+    content = <StoreOwnerRenderDashboard user={user} />;
+  } else if (activeTab === 'stores') {
+    content = <StoreOwnerRenderStores user={user} />;
+  } else if (activeTab === 'test-connection') {
+    content = <StoreOwnerTestConnection />;
+  }
 
   return (
     <DashboardSkeleton

@@ -105,21 +105,21 @@ const ProductCard = ({
   };
 
   return (
-    <div className="w-full bg-white rounded shadow p-4 flex flex-col gap-2 mb-4">
+    <div className="w-full bg-gray-800/50 rounded-xl shadow-lg p-6 flex flex-col gap-3 mb-4 border border-gray-700/50 backdrop-blur-sm">
       <img
         src={product.image || "/dummy_product.jpg"}
         alt={product.name}
-        className="w-full h-40 object-cover rounded mb-2"
+        className="w-full h-40 object-cover rounded-lg mb-2"
       />
-      <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
-      {product.description && <p className="text-gray-600">{product.description}</p>}
+      <h3 className="text-lg font-semibold text-gray-200">{product.name}</h3>
+      {product.description && <p className="text-gray-400">{product.description}</p>}
       
       <div className="flex flex-wrap gap-2 text-sm text-gray-500">
         {product.category && (
-          <span className="bg-gray-100 px-2 py-1 rounded">{product.category}</span>
+          <span className="bg-gray-700/50 px-3 py-1 rounded-lg border border-gray-600/50 text-gray-300">{product.category}</span>
         )}
         {product.tags?.map((tag, idx) => (
-          <span key={idx} className="bg-blue-100 text-blue-600 px-2 py-1 rounded">
+          <span key={idx} className="bg-blue-900/50 text-blue-300 px-3 py-1 rounded-lg border border-blue-700/50">
             {tag}
           </span>
         ))}
@@ -129,14 +129,14 @@ const ProductCard = ({
       {!isStoreOwner && (
         <div className="flex items-center gap-2 text-sm">
           {isSubscribed ? (
-            <span className="text-green-600 flex items-center gap-1">
+            <span className="text-green-400 flex items-center gap-1">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
               Subscribed
             </span>
           ) : (
-            <span className="text-gray-500 flex items-center gap-1">
+            <span className="text-gray-400 flex items-center gap-1">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
               </svg>
@@ -146,12 +146,12 @@ const ProductCard = ({
         </div>
       )}
 
-      <div className="mt-4 pt-2 border-t border-gray-100 text-xs text-gray-500 flex justify-between">
+      <div className="mt-4 pt-3 border-t border-gray-700/50 text-xs text-gray-500 flex justify-between">
         <span>Added: {formatDate(product.created_at)}</span>
         <span>Updated: {formatDate(product.updated_at)}</span>
       </div>
 
-      <div className="flex gap-2 mt-2 flex-wrap">
+      <div className="flex gap-2 mt-3 flex-wrap">
         {Object.entries(buttonConfigs).map(([key, config]) => (
           config.visible && (
             <button
@@ -159,7 +159,7 @@ const ProductCard = ({
               id={config.id}
               onClick={config.onClick}
               disabled={(isUnsubscribing && key === 'unsubscribe') || (isSubscribing && key === 'subscribe')}
-              className={`px-3 py-1 bg-${config.color}-500 text-white rounded hover:bg-${config.color}-600 text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+              className={`px-4 py-2 bg-gradient-to-r from-${config.color}-600 to-${config.color}-700 text-white rounded-lg hover:from-${config.color}-700 hover:to-${config.color}-800 text-sm font-medium transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               {config.text}
             </button>

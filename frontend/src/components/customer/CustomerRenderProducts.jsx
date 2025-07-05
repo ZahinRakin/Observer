@@ -147,18 +147,20 @@ const RenderProducts = () => {
   );
 
   if (loading) return <LoadingAnimation />;
-  if (error) return <div className="text-red-500">Error: {error}</div>;
+  if (error) return <div className="text-red-400">Error: {error}</div>;
 
   return (
     <div className="space-y-8">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Product Management</h1>
-        <p className="text-gray-600">Discover and manage your product subscriptions</p>
+      <div className="bg-gradient-to-r from-blue-900/50 via-indigo-900/50 to-purple-900/50 rounded-xl p-6 border border-blue-500/20 shadow-lg">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent mb-2">
+          Product Management
+        </h1>
+        <p className="text-gray-300">Discover and manage your product subscriptions</p>
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="bg-gray-800/50 rounded-xl shadow-lg p-6 border border-gray-700/50 backdrop-blur-sm">
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,20 +172,20 @@ const RenderProducts = () => {
             placeholder="Search products by name, description, category, or tags..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="block w-full pl-10 pr-3 py-3 bg-gray-700/50 border border-gray-600/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-200 placeholder-gray-400"
           />
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+      <div className="bg-gray-800/50 rounded-xl shadow-lg p-6 border border-gray-700/50 backdrop-blur-sm">
+        <div className="flex space-x-1 bg-gray-700/50 p-1 rounded-lg">
           <button
             onClick={() => setActiveTab('subscribed')}
             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
               activeTab === 'subscribed'
-                ? 'bg-white text-blue-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-800'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-gray-300 hover:text-gray-100'
             }`}
           >
             My Subscriptions ({products.length})
@@ -192,8 +194,8 @@ const RenderProducts = () => {
             onClick={() => setActiveTab('recommended')}
             className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
               activeTab === 'recommended'
-                ? 'bg-white text-blue-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-800'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'text-gray-300 hover:text-gray-100'
             }`}
           >
             Recommended ({recommendedProducts.length})
@@ -204,23 +206,23 @@ const RenderProducts = () => {
       {/* Content based on active tab */}
       {activeTab === 'subscribed' ? (
         <div className="space-y-6">
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-gray-800/50 rounded-xl shadow-lg p-6 border border-gray-700/50 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-xl font-bold text-gray-800">Your Subscribed Products</h2>
-                <p className="text-gray-600">Manage your product subscriptions and stay updated</p>
+                <h2 className="text-xl font-bold text-gray-200">Your Subscribed Products</h2>
+                <p className="text-gray-400">Manage your product subscriptions and stay updated</p>
               </div>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-400">
                 {filteredProducts.length} of {products.length} products
               </div>
             </div>
             
             {filteredProducts.length === 0 ? (
               <div className="text-center py-12">
-                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="mx-auto h-12 w-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No products found</h3>
+                <h3 className="mt-2 text-sm font-medium text-gray-300">No products found</h3>
                 <p className="mt-1 text-sm text-gray-500">
                   {searchTerm ? 'Try adjusting your search terms.' : 'Get started by subscribing to some products.'}
                 </p>
@@ -243,23 +245,23 @@ const RenderProducts = () => {
         </div>
       ) : (
         <div className="space-y-6">
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-gray-800/50 rounded-xl shadow-lg p-6 border border-gray-700/50 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h2 className="text-xl font-bold text-gray-800">Recommended Products</h2>
-                <p className="text-gray-600">Discover products you might be interested in</p>
+                <h2 className="text-xl font-bold text-gray-200">Recommended Products</h2>
+                <p className="text-gray-400">Discover products you might be interested in</p>
               </div>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-400">
                 {filteredRecommendedProducts.length} of {recommendedProducts.length} products
               </div>
             </div>
             
             {filteredRecommendedProducts.length === 0 ? (
               <div className="text-center py-12">
-                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="mx-auto h-12 w-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No recommendations found</h3>
+                <h3 className="mt-2 text-sm font-medium text-gray-300">No recommendations found</h3>
                 <p className="mt-1 text-sm text-gray-500">
                   {searchTerm ? 'Try adjusting your search terms.' : 'Check back later for new recommendations.'}
                 </p>
@@ -267,22 +269,22 @@ const RenderProducts = () => {
             ) : (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {filteredRecommendedProducts.map(product => (
-                  <div key={product._id} className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+                  <div key={product._id} className="bg-gray-700/50 rounded-lg shadow-md border border-gray-600/50 overflow-hidden backdrop-blur-sm">
                     <img
                       src={product.image || "/dummy_product.jpg"}
                       alt={product.name}
                       className="w-full h-48 object-cover"
                     />
                     <div className="p-4">
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">{product.name}</h3>
-                      <p className="text-gray-600 text-sm mb-3">{product.description}</p>
+                      <h3 className="text-lg font-semibold text-gray-200 mb-2">{product.name}</h3>
+                      <p className="text-gray-400 text-sm mb-3">{product.description}</p>
                       
                       <div className="flex flex-wrap gap-2 mb-3">
-                        <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs">
+                        <span className="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs border border-blue-700/50">
                           {product.category}
                         </span>
                         {product.tags?.map((tag, idx) => (
-                          <span key={idx} className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">
+                          <span key={idx} className="bg-gray-600/50 text-gray-300 px-2 py-1 rounded text-xs border border-gray-500/50">
                             {tag}
                           </span>
                         ))}
@@ -295,13 +297,13 @@ const RenderProducts = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleSubscribe(product._id)}
-                          className="flex-1 bg-blue-600 text-white py-2 px-3 rounded hover:bg-blue-700 transition-colors text-sm font-medium"
+                          className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2 px-3 rounded hover:from-blue-700 hover:to-blue-800 transition-all text-sm font-medium shadow-lg"
                         >
                           Subscribe
                         </button>
                         <button
                           onClick={() => handleViewAllNews(product)}
-                          className="bg-gray-100 text-gray-700 py-2 px-3 rounded hover:bg-gray-200 transition-colors text-sm"
+                          className="bg-gray-600/50 text-gray-300 py-2 px-3 rounded hover:bg-gray-600 transition-colors text-sm border border-gray-500/50"
                         >
                           View News
                         </button>

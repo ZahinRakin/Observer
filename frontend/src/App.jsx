@@ -7,7 +7,7 @@ import ErrorPage from './pages/Error.page.jsx';
 import AdminDashboard from './pages/AdminDashboard.page.jsx';
 import CustomerDashboard from './pages/CustomerDashboard.page.jsx';
 import StoreOwnerDashboard from './pages/StoreOwnerDashboard.page.jsx';
-
+import HelpSupportPage from './pages/HelpSupport.page.jsx';
 
 function App() {
 
@@ -35,6 +35,10 @@ function App() {
     },{
       path: '/store-owner-dashboard',
       element: <StoreOwnerDashboard/>,
+      errorElement: <ErrorPage/>
+    },{
+      path: '/help&support',
+      element: <HelpSupportPage/>,
       errorElement: <ErrorPage/>
     }
   ]);

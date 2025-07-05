@@ -42,49 +42,108 @@ const ProfileForm = ({ profile, handleSubmit, handleCancel }) => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="max-w-xl mx-auto bg-white p-8 rounded-2xl shadow flex flex-col gap-6">
-      <h2 className="text-2xl font-bold mb-2 text-blue-700">Edit Profile</h2>
+    <form onSubmit={onSubmit} className="max-w-xl mx-auto bg-gray-800/50 p-8 rounded-2xl shadow-lg flex flex-col gap-6 border border-gray-700/50 backdrop-blur-sm">
+      <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Edit Profile</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block font-medium mb-1">First Name *</label>
-          <input name="fname" value={form.fname} onChange={onChange} required className="w-full border rounded px-3 py-2" />
+          <label className="block font-medium mb-1 text-gray-200">First Name *</label>
+          <input 
+            name="fname" 
+            value={form.fname} 
+            onChange={onChange} 
+            required 
+            className="w-full border border-gray-600/50 rounded-lg px-3 py-2 bg-gray-700/50 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+          />
         </div>
         <div>
-          <label className="block font-medium mb-1">Last Name *</label>
-          <input name="lname" value={form.lname} onChange={onChange} required className="w-full border rounded px-3 py-2" />
+          <label className="block font-medium mb-1 text-gray-200">Last Name *</label>
+          <input 
+            name="lname" 
+            value={form.lname} 
+            onChange={onChange} 
+            required 
+            className="w-full border border-gray-600/50 rounded-lg px-3 py-2 bg-gray-700/50 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+          />
         </div>
         <div className="md:col-span-2">
-          <label className="block font-medium mb-1">Email *</label>
-          <input name="email" type="email" value={form.email} onChange={onChange} required className="w-full border rounded px-3 py-2" />
+          <label className="block font-medium mb-1 text-gray-200">Email *</label>
+          <input 
+            name="email" 
+            type="email" 
+            value={form.email} 
+            onChange={onChange} 
+            required 
+            className="w-full border border-gray-600/50 rounded-lg px-3 py-2 bg-gray-700/50 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+          />
         </div>
         <div className="md:col-span-2">
-          <label className="block font-medium mb-1">Username *</label>
-          <input name="username" value={form.username} onChange={onChange} required className="w-full border rounded px-3 py-2" />
+          <label className="block font-medium mb-1 text-gray-200">Username *</label>
+          <input 
+            name="username" 
+            value={form.username} 
+            onChange={onChange} 
+            required 
+            className="w-full border border-gray-600/50 rounded-lg px-3 py-2 bg-gray-700/50 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+          />
         </div>
         <div className="md:col-span-2">
-          <label className="block font-medium mb-1">Password</label>
-          <input name="password" type="password" value={form.password} onChange={onChange} className="w-full border rounded px-3 py-2" placeholder="Leave blank to keep current password" />
+          <label className="block font-medium mb-1 text-gray-200">Password</label>
+          <input 
+            name="password" 
+            type="password" 
+            value={form.password} 
+            onChange={onChange} 
+            className="w-full border border-gray-600/50 rounded-lg px-3 py-2 bg-gray-700/50 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+            placeholder="Leave blank to keep current password" 
+          />
         </div>
         <div className="md:col-span-2">
-          <label className="block font-medium mb-1">Account Type *</label>
-          <select name="account_type" value={form.account_type} onChange={onChange} required className="w-full border rounded px-3 py-2">
+          <label className="block font-medium mb-1 text-gray-200">Account Type *</label>
+          <select 
+            name="account_type" 
+            value={form.account_type} 
+            onChange={onChange} 
+            required 
+            className="w-full border border-gray-600/50 rounded-lg px-3 py-2 bg-gray-700/50 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
             <option value="">Select type</option>
             <option value="client">Client</option>
             <option value="storeowner">Store Owner</option>
           </select>
         </div>
         <div>
-          <label className="block font-medium mb-1">Avatar URL</label>
-          <input name="avatar" value={form.avatar} onChange={onChange} className="w-full border rounded px-3 py-2" />
+          <label className="block font-medium mb-1 text-gray-200">Avatar URL</label>
+          <input 
+            name="avatar" 
+            value={form.avatar} 
+            onChange={onChange} 
+            className="w-full border border-gray-600/50 rounded-lg px-3 py-2 bg-gray-700/50 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+          />
         </div>
         <div>
-          <label className="block font-medium mb-1">Cover Image URL</label>
-          <input name="cover_image" value={form.cover_image} onChange={onChange} className="w-full border rounded px-3 py-2" />
+          <label className="block font-medium mb-1 text-gray-200">Cover Image URL</label>
+          <input 
+            name="cover_image" 
+            value={form.cover_image} 
+            onChange={onChange} 
+            className="w-full border border-gray-600/50 rounded-lg px-3 py-2 bg-gray-700/50 text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+          />
         </div>
       </div>
       <div className="flex gap-2 mt-4 justify-end">
-        <button type="button" onClick={handleCancel} className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
-        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Submit</button>
+        <button 
+          type="button" 
+          onClick={handleCancel} 
+          className="px-4 py-2 bg-gray-600/50 text-gray-300 rounded-lg hover:bg-gray-600 transition-all duration-200 border border-gray-500/50"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg font-medium"
+        >
+          Submit
+        </button>
       </div>
     </form>
   );

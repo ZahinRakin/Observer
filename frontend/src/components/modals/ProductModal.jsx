@@ -128,15 +128,15 @@ const ProductModal = ({ open, onClose, store, products: PRODUCTS, onUpdateProduc
         newsList={dummyNews}
       />
       {!showNewsModal && !showNewsCardModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-white/10">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/50">
+          <div className="bg-gray-800/90 rounded-xl shadow-2xl p-6 w-full max-w-lg relative max-h-[90vh] overflow-y-auto border border-gray-700/50">
             <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold"
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-200 text-xl font-bold transition-colors duration-200"
               onClick={onClose}
             >
               &times;
             </button>
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Products for {store?.name}
             </h2>
             <div>
@@ -152,7 +152,7 @@ const ProductModal = ({ open, onClose, store, products: PRODUCTS, onUpdateProduc
                   />
                 ))
               ) : (
-                <div className="text-gray-400 text-center">No products found.</div>
+                <div className="text-gray-400 text-center py-8">No products found.</div>
               )}
             </div>
           </div>

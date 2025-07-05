@@ -6,26 +6,35 @@ import React from 'react';
  */
 const DashboardSkeleton = ({ sidebar, header, children, footer }) => {
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md hidden md:block">
-        {sidebar}
-      </aside>
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="bg-white shadow px-4 py-3">
-          {header}
-        </header>
-        {/* Main Content */}
-        <main className="flex-1 p-6">
-          {children}
+    <div className="h-screen bg-gray-900 flex flex-col overflow-hidden">
+      {/* Header - fixed at top */}
+      <header className="flex-shrink-0 border-b border-gray-700/50 shadow-sm z-20">
+        {header}
+      </header>
+      
+      {/* Main content area - flex to fill remaining space */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar - fixed on left */}
+        <aside className="w-64 hidden md:block flex-shrink-0 border-r border-gray-700/50 shadow-sm z-10">
+          {sidebar}
+        </aside>
+        
+        {/* Main Content Area - scrollable */}
+        <main className="flex-1 overflow-y-auto bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+          {/* Content wrapper with padding */}
+          <div className="p-6">
+            {children}
+          </div>
+          
+          {/* Footer - at end of main content */}
+          {footer && (
+            <div className="px-6 pb-6">
+              <footer className="border-t border-gray-700/50 shadow-sm bg-gray-800/50 rounded-lg p-4 backdrop-blur-sm">
+                {footer}
+              </footer>
+            </div>
+          )}
         </main>
-        {/* Footer */}
-        {footer && (
-          <footer className="bg-white shadow px-4 py-3 text-center text-gray-500 text-sm">
-            {footer}
-          </footer>
-        )}
       </div>
     </div>
   );

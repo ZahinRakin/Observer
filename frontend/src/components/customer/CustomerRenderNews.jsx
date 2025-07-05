@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext.jsx';
 import NewsCard from '../cards/NewsCard.jsx';
-import ProductCard from '../cards/ProductCard.jsx';
 import LoadingAnimation from '../Loading.jsx';
 
 const RenderNews = ({ customerId }) => {
@@ -111,31 +110,23 @@ const RenderNews = ({ customerId }) => {
       console.log('Update news:', newsItem);
     };
 
-    const handleSubscribe = (productId) => {
-      // Add product to subscribed list
-      setSubscribedProducts(prev => [...prev, productId]);
-    };
-
-    const handleUnsubscribe = (productId) => {
-      // Remove product from subscribed list
-      setSubscribedProducts(prev => prev.filter(id => id !== productId));
-    };
-
-    const handleViewAllNews = (product) => {
-      // Implement navigation to news view for this product
-      console.log('View all news for:', product.name);
+    const handleViewProduct = (product) => {
+      // Navigate to product details or products page
+      console.log('View product:', product.name);
     };
   
     if (loading) return <LoadingAnimation />;
-    if (error) return <div>Error: {error}</div>;
-    if (news.length === 0) return <div>No news available.</div>;
+    if (error) return <div className="text-red-400">Error: {error}</div>;
+    if (news.length === 0) return <div className="text-gray-300">No news available.</div>;
   
     return (
       <div className="space-y-8">
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Latest News</h1>
-          <p className="text-gray-600">Stay updated with news from your subscribed products</p>
+        <div className="bg-gradient-to-r from-purple-900/50 via-blue-900/50 to-indigo-900/50 rounded-xl p-6 border border-purple-500/20 shadow-lg">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-2">
+            Latest News
+          </h1>
+          <p className="text-gray-300">Stay updated with news from your subscribed products</p>
         </div>
         
         <div className="grid gap-6">
@@ -147,17 +138,28 @@ const RenderNews = ({ customerId }) => {
                 onUpdate={handleUpdate} 
               />
               
-              {/* Display related product using ProductCard */}
+              {/* Simple Related Product Display */}
               {item.product && (
-                <div className="bg-white rounded-xl shadow-lg p-6">
-                  <h4 className="font-semibold text-gray-800 mb-4 text-lg">Related Product</h4>
-                  <ProductCard
-                    product={item.product}
-                    onSubscribe={handleSubscribe}
-                    onUnsubscribe={handleUnsubscribe}
-                    onViewAllNews={handleViewAllNews}
-                    isSubscribed={subscribedProducts.includes(item.product._id)}
-                  />
+                <div className="bg-gray-800/50 rounded-xl shadow-lg p-4 border border-gray-700/50 backdrop-blur-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-200 text-sm">{item.product.name}</h4>
+                        <p className="text-gray-400 text-xs">{item.product.category}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleViewProduct(item.product)}
+                      className="px-3 py-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 text-xs font-medium shadow-lg"
+                    >
+                      View Product
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

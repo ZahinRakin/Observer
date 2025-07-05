@@ -99,7 +99,7 @@ async def login(login_data):
       },
       headers={"Authorization": f"Bearer {access_token}"}
     )
-    
+    print(f"inside login : res = {res.__dict__}")  # debugging log
     # Set refresh token cookie
     res.set_cookie(
       key="refreshToken",

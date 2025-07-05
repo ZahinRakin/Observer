@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CustomerFooter = () => {
+const AdminFooter = () => {
   return (
     <footer className="bg-gradient-to-r from-slate-900 via-gray-800 to-slate-900 text-white">
       {/* Main Footer Content */}
@@ -12,15 +12,15 @@ const CustomerFooter = () => {
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
                 <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  Customer Portal
+                  Admin Panel
                 </h3>
               </div>
               <p className="text-gray-300 text-sm leading-relaxed max-w-md">
-                Your gateway to premium products and exclusive news. Stay connected with your favorite brands and discover the latest updates and innovations.
+                Empowering administrators with cutting-edge tools and insights to manage, monitor, and optimize operations with precision and efficiency.
               </p>
             </div>
 
@@ -30,7 +30,7 @@ const CustomerFooter = () => {
                 Quick Links
               </h4>
               <ul className="space-y-2">
-                {['Dashboard', 'News', 'Products', 'Profile', 'Support'].map((item) => (
+                {['Dashboard', 'Analytics', 'Users', 'Settings', 'Reports'].map((item) => (
                   <li key={item}>
                     <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors duration-200 hover:translate-x-1 transform inline-block">
                       {item}
@@ -40,23 +40,23 @@ const CustomerFooter = () => {
               </ul>
             </div>
 
-            {/* Platform Status */}
+            {/* System Status */}
             <div>
               <h4 className="text-sm font-semibold text-gray-200 uppercase tracking-wider mb-4">
-                Platform Status
+                System Status
               </h4>
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-sm text-gray-300">All Services Operational</span>
+                  <span className="text-sm text-gray-300">All Systems Operational</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                  <span className="text-sm text-gray-300">News Updates: Real-time</span>
+                  <span className="text-sm text-gray-300">API Response: 45ms</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                  <span className="text-sm text-gray-300">Product Sync: Active</span>
+                  <span className="text-sm text-gray-300">Uptime: 99.9%</span>
                 </div>
               </div>
             </div>
@@ -70,12 +70,12 @@ const CustomerFooter = () => {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0">
             <div className="flex items-center space-x-6">
               <p className="text-gray-400 text-sm">
-                © 2025 Customer Portal. All rights reserved.
+                © 2025 Admin Panel. All rights reserved.
               </p>
               <div className="hidden md:flex items-center space-x-4 text-xs text-gray-500">
                 <span>v2.1.0</span>
                 <span>•</span>
-                <span>Premium Access</span>
+                <span>Build #4521</span>
               </div>
             </div>
             
@@ -106,4 +106,4 @@ const CustomerFooter = () => {
   );
 };
 
-export default CustomerFooter;
+export default AdminFooter;
