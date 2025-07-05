@@ -147,6 +147,7 @@ const ProductModal = ({ open, onClose, store, products: PRODUCTS, onUpdateProduc
                     onUpdate={handleUpdate}
                     onPublishNews={handlePublishNews}
                     onViewAllNews={handleViewAllNews}
+                    isSubscribed={false}
                   />
                 ))
               ) : (

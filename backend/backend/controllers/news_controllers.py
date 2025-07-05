@@ -1,3 +1,4 @@
+from backend.models.product_model import Product
 from fastapi import HTTPException
 from backend.models.news_model import News
 
@@ -59,3 +60,12 @@ async def delete_news(news_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error deleting news: {str(e)}")
 
+async def get_customer_news(customer_id: str):
+    products = await Product.find({"subscribers.$id": customer_id}).to_list()
+    all_news = []
+    for product in products:
+        news_items = await News.find({"product.$id": product._id}).to_list()
+        for news in news_items:
+            await news.fetch_link("product")  # This populates the linked product
+            all_news.append(news)
+    return all_news

@@ -15,6 +15,8 @@ async def list_customers():
 async def get_customer_route(customer_id: str):
     return await get_customer(customer_id)
 
+
+
 # @router.post("/")
 # async def create_customer_route(customer: Customer = Body(...)):
 #     return await create_customer(customer)

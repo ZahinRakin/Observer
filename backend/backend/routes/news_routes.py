@@ -7,7 +7,8 @@ from backend.controllers.news_controllers import (
     get_news,
     create_news,
     update_news,
-    delete_news
+    delete_news,
+    get_customer_news
 )
 
 # Model for partial updates
@@ -37,4 +38,8 @@ async def update_news_route(news_id: str, news_update: NewsUpdate = Body(...)):
 @router.delete("/{news_id}")
 async def delete_news_route(news_id: str):
     return await delete_news(news_id)
+
+@router.get("/{customer_id}/news")
+async def get_customer_news_route(customer_id: str):
+    return await get_customer_news(customer_id)
 
