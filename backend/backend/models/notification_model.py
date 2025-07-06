@@ -1,5 +1,4 @@
 from beanie import Document # type:ignore
-from beanie.odm.fields import Link # type:ignore
 from datetime import datetime, timezone
 from pydantic import Field
 
@@ -8,8 +7,8 @@ from .product_model import Product
 
 
 class Notification(Document):
-  product: Link[Product]
-  receiver: Link[User]
+  product: str  # Product ID as string
+  receiver: str  # User ID as string
   title: str
   description: str
   read: bool = Field(default=False)

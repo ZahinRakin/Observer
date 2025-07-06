@@ -58,17 +58,17 @@ const StoreOwnerHeader = ({ user, onViewProfile, onEditProfile }) => {
       {/* Right Section - Actions and Profile */}
       <div className="flex items-center gap-4">
         {/* Search Bar */}
-        <div className="hidden md:flex relative">
+        {/* <div className="hidden md:flex relative">
           <input
             type="text"
             placeholder="Search stores..."
             className="w-64 pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 text-sm text-white placeholder-gray-400"
           />
           <div className="absolute left-3 top-2.5 w-4 h-4 bg-gray-400 rounded-full"></div>
-        </div>
+        </div> */}
 
         {/* Notification Bell */}
-        <div className="relative">
+        {/* <div className="relative">
           <button className="p-2 hover:bg-gray-700 rounded-lg transition-colors duration-200 relative">
             <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 15V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v4c0 .386-.149.735-.405 1.005L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -77,7 +77,7 @@ const StoreOwnerHeader = ({ user, onViewProfile, onEditProfile }) => {
               <div className="w-1 h-1 bg-white rounded-full"></div>
             </div>
           </button>
-        </div>
+        </div> */}
 
         {/* Profile Dropdown */}
         <div

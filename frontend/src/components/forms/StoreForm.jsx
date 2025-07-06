@@ -74,7 +74,7 @@ const StoreForm = ({ store, handleGoBack, handleSubmit, handleCancel }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-gray-800/50 p-8 rounded-xl shadow-lg border border-gray-700/50 backdrop-blur-sm">
+    <form onSubmit={onSubmit} className="max-w-2xl mx-auto bg-gray-800/50 p-8 rounded-xl shadow-lg border border-gray-700/50 backdrop-blur-sm">
       <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent text-center">
         {store ? 'Update Store' : 'Create Store'}
       </h2>
@@ -274,15 +274,14 @@ const StoreForm = ({ store, handleGoBack, handleSubmit, handleCancel }) => {
             Cancel
           </button>
           <button 
-            type="button" 
-            onClick={onSubmit}
+            type="submit" 
             className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg font-medium"
           >
             {store ? 'Update Store' : 'Create Store'}
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

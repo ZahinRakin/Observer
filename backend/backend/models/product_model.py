@@ -1,5 +1,4 @@
 from beanie import Document # type:ignore
-from beanie.odm.fields import Link # type:ignore
 from datetime import datetime, timezone
 from pydantic import Field
 from typing import Optional, List
@@ -12,7 +11,7 @@ class Product(Document):
   image: Optional[str] = None
   category: Optional[str] = None
   tags: Optional[List[str]] = Field(default_factory=list)
-  subscribers: Optional[List[Link[User]]] = Field(default_factory=list)
+  subscribers: Optional[List[str]] = Field(default_factory=list)  # User IDs as strings
   created_at: datetime = Field(default_factory = lambda : datetime.now(timezone.utc))
   updated_at: datetime = Field(default_factory = lambda : datetime.now(timezone.utc))
   

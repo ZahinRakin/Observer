@@ -128,7 +128,7 @@ const ProductModal = ({ open, onClose, store, products: PRODUCTS, onUpdateProduc
         newsList={dummyNews}
       />
       {!showNewsModal && !showNewsCardModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/50">
+        <div className="fixed inset-0 z-100 flex items-center justify-center backdrop-blur-sm bg-black/50">
           <div className="bg-gray-800/90 rounded-xl shadow-2xl p-6 w-full max-w-lg relative max-h-[90vh] overflow-y-auto border border-gray-700/50">
             <button
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-200 text-xl font-bold transition-colors duration-200"

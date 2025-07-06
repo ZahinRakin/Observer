@@ -7,7 +7,7 @@ import StoreOwnerHeader from '../../components/storeowner/StoreOwnerHeader.jsx';
 import StoreOwnerFooter from '../../components/storeowner/StoreOwnerFooter.jsx';
 import StoreOwnerRenderDashboard from '../../components/storeowner/StoreOwnerRenderDashboard.jsx';
 import StoreOwnerRenderStores from '../../components/storeowner/StoreOwnerRenderStores.jsx';
-import StoreOwnerTestConnection from '../../components/storeowner/StoreOwnerTestConnection.jsx';
+// import StoreOwnerTestConnection from '../../components/storeowner/StoreOwnerTestConnection.jsx';
 
 const StoreOwnerDashboard = () => {
   const { user } = useContext(UserContext);

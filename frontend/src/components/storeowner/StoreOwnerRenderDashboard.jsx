@@ -98,7 +98,7 @@ const StoreOwnerRenderDashboard = ({ user }) => {
           <div className="mt-4 p-3 bg-gray-800/50 rounded-lg border border-gray-600">
             <div className="text-xs text-gray-400 space-y-1">
               <div>User ID: {user?.id || 'undefined'}</div>
-              <div>User Role: {user?.role || 'undefined'}</div>
+              {/* <div>User Role: {user?.role || 'undefined'}</div> */}
               <div>Account Type: {user?.account_type || 'undefined'}</div>
             </div>
           </div>

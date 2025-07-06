@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useUser } from '../../contexts/UserContext.jsx';
-import NewsCardModal from '../modals/NewsCardModal.jsx';
 
 const formatDate = (date) => {
   if (!date) return '';
@@ -13,6 +12,7 @@ const ProductCard = ({
   onDelete, 
   onUpdate, 
   onPublishNews,
+  onViewAllNews,
   onUnsubscribe,
   onSubscribe,
   isSubscribed = false // New prop to indicate if user is subscribed to this product
@@ -20,7 +20,9 @@ const ProductCard = ({
   const { user } = useUser();
   const [isUnsubscribing, setIsUnsubscribing] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
-  const [showNewsModal, setShowNewsModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const isStoreOwner = 
     user?.role === 'storeowner' || 
     user?.account_type === 'storeowner' ||
@@ -59,48 +61,89 @@ const ProductCard = ({
     }
   };
 
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      if (onDelete) {
+        await onDelete(product._id || product.id);
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleUpdate = async () => {
+    setIsUpdating(true);
+    try {
+      onUpdate?.(product);
+    } catch (error) {
+      console.error('Error updating product:', error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handlePublishNews = async () => {
+    setIsPublishing(true);
+    try {
+      onPublishNews?.(product);
+    } catch (error) {
+      console.error('Error publishing news:', error);
+    } finally {
+      setIsPublishing(false);
+    }
+  };
+
   const buttonConfigs = {
     delete: {
       id: 'product-delete-btn',
-      text: 'Delete',
-      color: 'red',
-      onClick: () => onDelete?.(product),
-      visible: isStoreOwner
+      text: isDeleting ? 'Deleting...' : 'Delete',
+      color: isDeleting ? 'gray' : 'red',
+      onClick: handleDelete,
+      visible: isStoreOwner,
+      disabled: isDeleting
     },
     update: {
       id: 'product-update-btn',
-      text: 'Update',
-      color: 'yellow',
-      onClick: () => onUpdate?.(product),
-      visible: isStoreOwner
+      text: isUpdating ? 'Updating...' : 'Update',
+      color: isUpdating ? 'gray' : 'yellow',
+      onClick: handleUpdate,
+      visible: isStoreOwner,
+      disabled: isUpdating
     },
     publishNews: {
       id: 'product-publish-news-btn',
-      text: 'Publish News',
-      color: 'blue',
-      onClick: () => onPublishNews?.(product),
-      visible: isStoreOwner
+      text: isPublishing ? 'Publishing...' : 'Publish News',
+      color: isPublishing ? 'gray' : 'blue',
+      onClick: handlePublishNews,
+      visible: isStoreOwner,
+      disabled: isPublishing
     },
     viewAllNews: {
       id: 'product-view-news-btn',
       text: 'View All News',
       color: 'purple',
-      onClick: () => setShowNewsModal(true),
-      visible: isStoreOwner || (!isStoreOwner && isSubscribed)
+      onClick: () => onViewAllNews?.(product),
+      visible: isStoreOwner || (!isStoreOwner && isSubscribed),
+      disabled: false
     },
     subscribe: {
       id: 'product-subscribe-btn',
       text: isSubscribing ? 'Subscribing...' : 'Subscribe',
       color: isSubscribing ? 'gray' : 'green',
       onClick: handleSubscribe,
-      visible: !isStoreOwner && !isSubscribed
+      visible: !isStoreOwner && !isSubscribed,
+      disabled: isSubscribing
     },
     unsubscribe: {
       id: 'product-unsubscribe-btn',
       text: isUnsubscribing ? 'Processing...' : 'Unsubscribe',
       color: isUnsubscribing ? 'gray' : 'red',
       onClick: handleUnsubscribe,
-      visible: !isStoreOwner && isSubscribed
+      visible: !isStoreOwner && isSubscribed,
+      disabled: isUnsubscribing
     }
   };
 
@@ -158,7 +201,7 @@ const ProductCard = ({
               key={key}
               id={config.id}
               onClick={config.onClick}
-              disabled={(isUnsubscribing && key === 'unsubscribe') || (isSubscribing && key === 'subscribe')}
+              disabled={config.disabled}
               className={`px-4 py-2 bg-gradient-to-r from-${config.color}-600 to-${config.color}-700 text-white rounded-lg hover:from-${config.color}-700 hover:to-${config.color}-800 text-sm font-medium transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               {config.text}
@@ -167,15 +210,6 @@ const ProductCard = ({
         ))}
       </div>
 
-      {/* News Modal - Show to store owners or subscribed customers */}
-      {showNewsModal && (isStoreOwner || isSubscribed) && (
-        <NewsCardModal 
-          open={showNewsModal}
-          onClose={() => setShowNewsModal(false)}
-          productId={product._id}
-          isStoreOwner={isStoreOwner}
-        />
-      )}
     </div>
   );
 };

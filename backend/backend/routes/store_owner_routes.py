@@ -14,9 +14,17 @@ from backend.controllers.store_owner_controllers import (
     delete_store_for_owner,
     get_store_products,
     create_product_for_store,
+    delete_product_for_store,
     get_store_owner_news,
     create_news_for_store_owner
 )
+from pydantic import BaseModel
+
+# Pydantic model for news creation (without auto-generated fields)
+class NewsCreate(BaseModel):
+    product: str
+    title: str
+    description: str
 
 router = APIRouter()
 
@@ -69,6 +77,11 @@ async def create_product_route(store_owner_id: str, store_id: str, product: Prod
     """Create a new product for a store owned by the store owner"""
     return await create_product_for_store(store_owner_id, store_id, product)
 
+@router.delete("/{store_owner_id}/stores/{store_id}/products/{product_id}")
+async def delete_product_route(store_owner_id: str, store_id: str, product_id: str):
+    """Delete a product from a store owned by the store owner"""
+    return await delete_product_for_store(store_owner_id, store_id, product_id)
+
 # News Management
 @router.get("/{store_owner_id}/news")
 async def get_store_owner_news_route(store_owner_id: str):
@@ -76,7 +89,18 @@ async def get_store_owner_news_route(store_owner_id: str):
     return await get_store_owner_news(store_owner_id)
 
 @router.post("/{store_owner_id}/news")
-async def create_news_route(store_owner_id: str, news: News = Body(...)):
+async def create_news_route(store_owner_id: str, news: NewsCreate = Body(...)):
     """Create a new news article for the store owner"""
+    print(f"🔍 DEBUG - Backend received store_owner_id: {store_owner_id}")
+    print(f"🔍 DEBUG - Backend received news data: {news}")
+    print(f"🔍 DEBUG - News model dump: {news.model_dump()}")
     return await create_news_for_store_owner(store_owner_id, news)
+
+# Test endpoint to debug the issue
+@router.post("/{store_owner_id}/news-test")
+async def test_news_route(store_owner_id: str, news: dict = Body(...)):
+    """Test endpoint to see what data is being received"""
+    print(f"🔍 DEBUG - Test endpoint received store_owner_id: {store_owner_id}")
+    print(f"🔍 DEBUG - Test endpoint received raw news data: {news}")
+    return {"message": "Test successful", "received_data": news}
 

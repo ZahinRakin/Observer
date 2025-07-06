@@ -1,128 +1,40 @@
 import React, { useState } from 'react';
-import ProductModal from '../modals/ProductModal';
-import ProductFormModal from '../modals/ProductFormModal';
-import NewsFormModal from '../modals/NewsFormModal';
 
 /**
  * StoreCard - Card component to display a single store
  * Props: store (object with fields: name, description, image, location, phone, email, website, facebook, instagram)
  */
-const StoreCard = ({ store, onDelete, onUpdate, onViewProducts }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [products, setProducts] = useState(store.products || []);
+const StoreCard = ({ store, onDelete, onUpdate, onViewProducts, onAddProduct }) => {
   const [deleted, setDeleted] = useState(false);
   const [storeState, setStoreState] = useState(store);
-  const [showProductForm, setShowProductForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
-  const [showNewsModal, setShowNewsModal] = useState(false);
-  const [newsProduct, setNewsProduct] = useState(null);
 
   const handleDelete = async (e) => {
     e.stopPropagation();
-    // TODO: Communicate with backend to delete the store
-    // Example: await axios.delete(`/api/v1/stores/${storeState.id}`);
-    setDeleted(true); // Remove from UI after successful delete
-    if (onDelete) onDelete(storeState);
+    if (onDelete) {
+      await onDelete(storeState);
+      setDeleted(true); // Remove from UI after successful delete
+    }
   };
 
   const handleUpdate = async (e) => {
     e.stopPropagation();
-    // TODO: Communicate with backend to update the store
-    // Example: const updated = await axios.put(`/api/v1/stores/${storeState.id}`, { ...storeState, name: storeState.name + ' (Updated)' });
-    const updated = { ...storeState, name: storeState.name + ' (Updated)' };
-    setStoreState(updated); // Update local state for UI
-    if (onUpdate) onUpdate(updated);
+    if (onUpdate) {
+      onUpdate(storeState);
+    }
   };
 
   const handleAddProduct = () => {
-    setModalOpen(false); // Close ProductModal before opening form
-    setEditingProduct(null);
-    setShowProductForm(true);
-  };
-
-  // Handler for updating a product from ProductCard
-  const handleUpdateProduct = (product) => {
-    setModalOpen(false); // Close ProductModal before opening form
-    setEditingProduct(product);
-    setShowProductForm(true);
-  };
-
-  // Handler for publishing news from ProductCard/ProductModal
-  const handlePublishNews = (product) => {
-    setModalOpen(false); // Hide ProductModal
-    setShowProductForm(false);
-    setEditingProduct(null);
-    setNewsProduct(product);
-    setShowNewsModal(true);
-  };
-
-  const handleProductGoBack = () => {
-    setShowProductForm(false);
-    setEditingProduct(null);
-    setModalOpen(true); // Reopen ProductModal if needed
-  };
-
-  const handleProductCancel = () => {
-    setShowProductForm(false);
-    setEditingProduct(null);
-    setModalOpen(true); // Reopen ProductModal if needed
-  };
-
-  const handleProductSubmit = (form) => {
-    if (editingProduct) {
-      setProducts(prev => prev.map(p => p.id === editingProduct.id ? { ...p, ...form } : p));
-    } else {
-      setProducts(prev => [{ ...form, id: Date.now() }, ...prev]);
+    if (onAddProduct) {
+      onAddProduct(storeState);
     }
-    setShowProductForm(false);
-    setEditingProduct(null);
-    setModalOpen(true); // Reopen ProductModal if needed
-  };
-
-  const handleNewsGoBack = () => {
-    setShowNewsModal(false);
-    setNewsProduct(null);
-    setModalOpen(true); // Reopen ProductModal
-  };
-
-  const handleNewsCancel = () => {
-    setShowNewsModal(false);
-    setNewsProduct(null);
-    setModalOpen(true); // Reopen ProductModal
-  };
-
-  const handleNewsSubmit = (newsData) => {
-    // TODO: Integrate with backend or update state as needed
-    setShowNewsModal(false);
-    setNewsProduct(null);
-    setModalOpen(true); // Reopen ProductModal
   };
 
   if (deleted) return null;
 
   return (
-    <>
-      <ProductFormModal
-        open={showProductForm}
-        onClose={handleProductCancel}
-        product={editingProduct}
-        onSubmit={handleProductSubmit}
-        onGoBack={handleProductGoBack}
-        onCancel={handleProductCancel}
-      />
-      <NewsFormModal
-        open={showNewsModal}
-        onClose={handleNewsCancel}
-        productId={newsProduct?.id}
-        news={null}
-        onSubmit={handleNewsSubmit}
-        onGoBack={handleNewsGoBack}
-        onCancel={handleNewsCancel}
-      />
-      <div
-        className="w-full bg-gray-800/50 rounded-xl shadow-lg p-6 flex flex-col gap-3 mb-4 cursor-pointer hover:shadow-xl transition-all duration-200 border border-gray-700/50 backdrop-blur-sm"
-        onClick={() => setModalOpen(true)}
-      >
+    <div
+      className="w-full bg-gray-800/50 rounded-xl shadow-lg p-6 flex flex-col gap-3 mb-4 hover:shadow-xl transition-all duration-200 border border-gray-700/50 backdrop-blur-sm"
+    >
         {storeState.image && (
           <img
             src={storeState.image}
@@ -200,15 +112,6 @@ const StoreCard = ({ store, onDelete, onUpdate, onViewProducts }) => {
           </button>
         </div>
       </div>
-      <ProductModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        store={{ ...storeState, products }}
-        products={products}
-        onUpdateProduct={handleUpdateProduct}
-        onPublishNews={handlePublishNews}
-      />
-    </>
   );
 };
 

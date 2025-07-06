@@ -122,9 +122,9 @@ class StoreOwnerService {
     }
   }
 
-  async deleteProduct(productId) {
+  async deleteProduct(storeOwnerId, storeId, productId) {
     try {
-      const response = await api.delete(`/product/${productId}`);
+      const response = await api.delete(`/storeowner/${storeOwnerId}/stores/${storeId}/products/${productId}`);
       return response.data;
     } catch (error) {
       console.error('Error deleting product:', error);
@@ -169,6 +169,50 @@ class StoreOwnerService {
       return response.data;
     } catch (error) {
       console.error('Error deleting news:', error);
+      throw error;
+    }
+  }
+
+  // Product-specific News Management
+  async getProductNews(productId) {
+    try {
+      console.log('🔍 DEBUG - getProductNews called with productId:', productId);
+      console.log('🔍 DEBUG - Making request to:', `/news/product/${productId}`);
+      
+      const response = await api.get(`/news/product/${productId}`);
+      console.log('🔍 DEBUG - getProductNews response:', response.data);
+      
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error fetching product news:', error);
+      console.error('❌ Error response:', error.response?.data);
+      throw error;
+    }
+  }
+
+  async createProductNews(storeOwnerId, productId, newsData) {
+    console.log('🚀 createProductNews called with:', { storeOwnerId, productId, newsData });
+    
+    try {
+      // Use the product field from newsData if it exists, otherwise use the provided productId
+      const { title, description, product } = newsData;
+      const requestData = {
+        product: product || productId,
+        title,
+        description
+      };
+      
+      console.log('🔍 DEBUG - createProductNews request data:', requestData);
+      console.log('🔍 DEBUG - storeOwnerId:', storeOwnerId);
+      console.log('🔍 DEBUG - productId:', productId);
+      console.log('🔍 DEBUG - newsData:', newsData);
+      console.log('🔍 DEBUG - Final requestData:', requestData);
+      
+      const response = await api.post(`/storeowner/${storeOwnerId}/news`, requestData);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error creating product news:', error);
+      console.error('❌ Error response:', error.response?.data);
       throw error;
     }
   }

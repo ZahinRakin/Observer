@@ -61,11 +61,51 @@ async def delete_news(news_id: str):
         raise HTTPException(status_code=500, detail=f"Error deleting news: {str(e)}")
 
 async def get_customer_news(customer_id: str):
-    products = await Product.find({"subscribers.$id": customer_id}).to_list()
+    products = await Product.find({"subscribers": customer_id}).to_list()
     all_news = []
     for product in products:
-        news_items = await News.find({"product.$id": product._id}).to_list()
-        for news in news_items:
-            await news.fetch_link("product")  # This populates the linked product
-            all_news.append(news)
+        news_items = await News.find({"product": str(product._id)}).to_list()
+        all_news.extend(news_items)
     return all_news
+
+async def get_product_news(product_id: str):
+    """Get all news for a specific product"""
+    try:
+        print(f"🔍 DEBUG - get_product_news called with product_id: {product_id}")
+        
+        # Verify the product exists
+        product = await Product.get(product_id)
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
+        
+        print(f"🔍 DEBUG - Found product: {product.name}")
+        
+        # Get all news for this product using string product ID
+        news_items = await News.find({"product": product_id}).to_list()
+        
+        print(f"🔍 DEBUG - Found {len(news_items)} news items for product {product_id}")
+        
+        # Convert to clean response format
+        clean_news_items = []
+        for news in news_items:
+            # Create a clean response
+            clean_news = {
+                'id': str(news.id),
+                'product': news.product,  # Already a string
+                'title': news.title,
+                'description': news.description,
+                'author_id': news.author_id or "Unknown",  # Handle None values
+                'author_name': news.author_name or "Unknown",  # Handle None values
+                'created_at': news.created_at,
+                'updated_at': news.updated_at
+            }
+            clean_news_items.append(clean_news)
+        
+        print(f"🔍 DEBUG - Returning {len(clean_news_items)} clean news items")
+        return clean_news_items
+    except HTTPException:
+        # Re-raise HTTPExceptions (like 404)
+        raise
+    except Exception as e:
+        print(f"❌ ERROR in get_product_news: {e}")
+        raise HTTPException(status_code=500, detail=f"Error fetching product news: {str(e)}")

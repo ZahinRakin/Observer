@@ -1,5 +1,5 @@
+from datetime import datetime, timezone
 from beanie import Document # type:ignore
-from beanie.odm.fields import Link # type:ignore
 from typing import List, Optional
 from pydantic import Field
 
@@ -16,7 +16,9 @@ class Store(Document):
   website: Optional[str] = None
   facebook: Optional[str] = None
   instagram: Optional[str] = None
-  products: Optional[List[Link[Product]]] = Field(default_factory=list)
+  products: Optional[List[str]] = Field(default_factory=list)  # Product IDs as strings
+  created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+  updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
   
   class Settings:
     name = "stores"
