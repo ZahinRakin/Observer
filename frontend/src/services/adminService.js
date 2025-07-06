@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = '/api/v1/admin';
+const API_BASE_URL = '/api/v1';
 
 // Configure axios defaults
 const adminAPI = axios.create({
@@ -41,31 +41,31 @@ adminAPI.interceptors.response.use(
 export const adminService = {
   // Get all admins
   getAllAdmins: async () => {
-    const response = await adminAPI.get('/');
+    const response = await adminAPI.get('/admin');
     return response.data;
   },
 
   // Get specific admin
   getAdmin: async (adminId) => {
-    const response = await adminAPI.get(`/${adminId}`);
+    const response = await adminAPI.get(`/admin/${adminId}`);
     return response.data;
   },
 
   // Create new admin
   createAdmin: async (adminData) => {
-    const response = await adminAPI.post('/', adminData);
+    const response = await adminAPI.post('/admin/', adminData);
     return response.data;
   },
 
   // Update admin
   updateAdmin: async (adminId, adminData) => {
-    const response = await adminAPI.put(`/${adminId}`, adminData);
+    const response = await adminAPI.put(`/admin/${adminId}`, adminData);
     return response.data;
   },
 
   // Delete admin
   deleteAdmin: async (adminId) => {
-    const response = await adminAPI.delete(`/${adminId}`);
+    const response = await adminAPI.delete(`/admin/${adminId}`);
     return response.data;
   },
 };
@@ -74,103 +74,103 @@ export const adminService = {
 export const userManagementService = {
   // Get all users
   getAllUsers: async () => {
-    const response = await adminAPI.get('/users/all');
+    const response = await adminAPI.get('/user/');
     return response.data;
   },
 
   // Get specific user
   getUser: async (userId) => {
-    const response = await adminAPI.get(`/users/${userId}`);
+    const response = await adminAPI.get(`/user/${userId}`);
     return response.data;
   },
 
   // Update user
   updateUser: async (userId, userData) => {
-    const response = await adminAPI.put(`/users/${userId}`, userData);
+    const response = await adminAPI.put(`/user/${userId}`, userData);
     return response.data;
   },
 
   // Delete user
   deleteUser: async (userId) => {
-    const response = await adminAPI.delete(`/users/${userId}`);
+    const response = await adminAPI.delete(`/user/${userId}`);
     return response.data;
   },
 
   // Activate user
-  activateUser: async (userId) => {
-    const response = await adminAPI.post(`/users/${userId}/activate`);
-    return response.data;
-  },
+  // activateUser: async (userId) => {
+  //   const response = await adminAPI.post(`/users/${userId}/activate`);
+  //   return response.data;
+  // },
 
   // Deactivate user
-  deactivateUser: async (userId) => {
-    const response = await adminAPI.post(`/users/${userId}/deactivate`);
-    return response.data;
-  },
+  // deactivateUser: async (userId) => {
+  //   const response = await adminAPI.post(`/users/${userId}/deactivate`);
+  //   return response.data;
+  // },
 };
 
 // System Settings
-export const settingsService = {
-  // Get system settings
-  getSettings: async () => {
-    const response = await adminAPI.get('/settings');
-    return response.data;
-  },
+// export const settingsService = {
+//   // Get system settings
+//   getSettings: async () => {
+//     const response = await adminAPI.get('/settings');
+//     return response.data;
+//   },
 
-  // Update system settings
-  updateSettings: async (settings) => {
-    const response = await adminAPI.put('/settings', settings);
-    return response.data;
-  },
-};
+//   // Update system settings
+//   updateSettings: async (settings) => {
+//     const response = await adminAPI.put('/settings', settings);
+//     return response.data;
+//   },
+// };
 
 // Dashboard & Analytics
 export const dashboardService = {
   // Get dashboard statistics
   getStats: async () => {
-    const response = await adminAPI.get('/dashboard/stats');
+    const response = await adminAPI.get('/admin/dashboard/stats');
     return response.data;
   },
 
   // Get recent activity
   getRecentActivity: async (limit = 10) => {
-    const response = await adminAPI.get(`/dashboard/activity?limit=${limit}`);
+    const response = await adminAPI.get(`/admin/dashboard/activity?limit=${limit}`); // have to build
     return response.data;
   },
 };
 
 // System Health
-export const systemService = {
-  // Get system health
-  getHealth: async () => {
-    const response = await adminAPI.get('/system/health');
-    return response.data;
-  },
-};
+// export const systemService = {
+//   // Get system health
+//   getHealth: async () => {
+//     const response = await adminAPI.get('/system/health');
+//     return response.data;
+//   },
+// };
 
 // Store Management (Admin View)
-export const storeManagementService = {
-  // Get all stores
-  getAllStores: async () => {
-    const response = await adminAPI.get('/stores/all');
-    return response.data;
-  },
+// export const storeManagementService = {
+//   // Get all stores
+//   getAllStores: async () => {
+//     const response = await adminAPI.get('/store/');
+//     return response.data;
+//   },
 
-  // Get specific store
-  getStore: async (storeId) => {
-    const response = await adminAPI.get(`/stores/${storeId}`);
-    return response.data;
-  },
-};
+//   // Get specific store
+//   getStore: async (storeId) => {
+//     const response = await adminAPI.get(`/store/${storeId}`);
+//     return response.data;
+//   },
+// };
 
 // Product Management (Admin View)
-export const productManagementService = {
-  // Get all products
-  getAllProducts: async () => {
-    const response = await adminAPI.get('/products/all');
-    return response.data;
-  },
-};
+// export const productManagementService = {
+//   // Get all products
+//   getAllProducts: async () => {
+//     const response = await adminAPI.get('/product/');
+//     return response.data;
+//   },
+// };
 
 // Error handling utility
 export const handleAPIError = (error) => {

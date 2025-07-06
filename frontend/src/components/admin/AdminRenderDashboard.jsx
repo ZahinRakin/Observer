@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { dashboardService, systemService, handleAPIError } from '../../services/adminService.js';
+import { dashboardService, handleAPIError } from '../../services/adminService.js';
 
 const AdminRenderDashboard = ({ user }) => {
   const [stats, setStats] = useState({
     totalUsers: 0,
     activeStores: 0,
     totalProducts: 0,
-    recentActivity: []
+    // recentActivity: []
   });
-  const [systemHealth, setSystemHealth] = useState({
-    status: 'loading',
-    uptime: '--',
-    apiResponseTime: '--',
-    database: '--',
-    services: {}
-  });
+  // const [systemHealth, setSystemHealth] = useState({
+  //   status: 'loading',
+  //   uptime: '--',
+  //   apiResponseTime: '--',
+  //   database: '--',
+  //   services: {}
+  // });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -27,11 +27,11 @@ const AdminRenderDashboard = ({ user }) => {
         // Fetch dashboard stats and system health in parallel
         const [statsData, healthData] = await Promise.all([
           dashboardService.getStats(),
-          systemService.getHealth()
+          // systemService.getHealth()
         ]);
 
         setStats(statsData);
-        setSystemHealth(healthData);
+        // setSystemHealth(healthData);
       } catch (err) {
         const errorInfo = handleAPIError(err);
         setError(errorInfo.message);
@@ -141,9 +141,9 @@ const AdminRenderDashboard = ({ user }) => {
         </div>
         
         {/* System Health & Recent Activity */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
           {/* System Health */}
-          <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600/50">
+          {/* <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600/50">
             <h3 className="text-lg font-semibold text-gray-200 mb-3">System Health</h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -173,10 +173,10 @@ const AdminRenderDashboard = ({ user }) => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           
           {/* Recent Activity */}
-          <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600/50">
+          {/* <div className="bg-gray-700/50 p-4 rounded-lg border border-gray-600/50">
             <h3 className="text-lg font-semibold text-gray-200 mb-3">Recent Activity</h3>
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {stats.recentActivity && stats.recentActivity.length > 0 ? (
@@ -198,10 +198,10 @@ const AdminRenderDashboard = ({ user }) => {
               )}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Quick Actions */}
-        <div className="mt-6 bg-gray-700/50 p-4 rounded-lg border border-gray-600/50">
+        {/* <div className="mt-6 bg-gray-700/50 p-4 rounded-lg border border-gray-600/50">
           <h3 className="text-lg font-semibold text-gray-200 mb-3">Quick Actions</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <button className="w-full text-left px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded hover:from-blue-700 hover:to-blue-800 transition-all duration-200 text-sm font-medium">
@@ -214,7 +214,7 @@ const AdminRenderDashboard = ({ user }) => {
               System Settings
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
       
       {/* Current Session Info */}
@@ -226,12 +226,12 @@ const AdminRenderDashboard = ({ user }) => {
               <p className="text-gray-300">Logged in as: <span className="font-semibold text-white">{user.username}</span></p>
               <p className="text-gray-300">Role: <span className="font-semibold text-white">{user.role || user.account_type}</span></p>
             </div>
-            <div>
+            {/* <div>
               <p className="text-gray-300">Session ID: <span className="font-mono text-sm text-gray-400">{user.id || 'N/A'}</span></p>
               <p className="text-gray-300">Last Login: <span className="text-sm text-gray-400">
                 {user.last_login ? new Date(user.last_login).toLocaleString() : 'N/A'}
               </span></p>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

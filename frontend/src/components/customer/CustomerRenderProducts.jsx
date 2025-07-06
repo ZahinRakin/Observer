@@ -526,6 +526,7 @@ const RenderProducts = () => {
                     product={product}
                     onSubscribe={handleSubscribe}
                     isSubscribed={false}
+                    // Do NOT pass onViewAllNews or onUnsubscribe for 'All' tab
                   />
                 ))}
               </div>

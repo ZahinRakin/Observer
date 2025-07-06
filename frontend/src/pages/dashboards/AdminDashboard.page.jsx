@@ -7,7 +7,7 @@ import AdminHeader from '../../components/admin/AdminHeader';
 import AdminFooter from '../../components/admin/AdminFooter';
 import AdminRenderDashboard from '../../components/admin/AdminRenderDashboard';
 import AdminRenderUsers from '../../components/admin/AdminRenderUsers';
-import AdminRenderSettings from '../../components/admin/AdminRenderSettings';
+// import AdminRenderSettings from '../../components/admin/AdminRenderSettings';
 import AdminTestConnection from '../../components/admin/AdminTestConnection';
 
 const AdminDashboard = () => {

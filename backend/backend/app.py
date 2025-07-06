@@ -14,6 +14,7 @@ from backend.routes.news_routes import router as news_router
 from backend.routes.notification_routes import router as notification_router
 from backend.routes.healthcheck_routes import router as healthcheck_router
 from backend.routes.g_auth_routes import router as g_auth_router
+# from backend.routes.store_routes import router as store_router
 
 
 @asynccontextmanager
@@ -43,7 +44,7 @@ app.include_router(user_router, prefix="/api/v1/user", tags=["user"])
 app.include_router(store_owner_router, prefix="/api/v1/storeowner", tags=["storeowner"])
 app.include_router(customer_router, prefix="/api/v1/customer", tags=["customer"])
 app.include_router(admin_router, prefix="/api/v1/admin", tags=["admin"])
-# app.include_router(store_router, prefix="/api/v1/store")this is still under consideration.
+# app.include_router(store_router, prefix="/api/v1/store")                        # this was commented out. I don't know if it would work or not.
 app.include_router(product_router, prefix="/api/v1/product", tags=["product"])
 app.include_router(news_router, prefix="/api/v1/news", tags=["news"])
 app.include_router(notification_router, prefix="/api/v1/notification", tags=["notification"])

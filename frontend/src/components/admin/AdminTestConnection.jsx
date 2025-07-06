@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { dashboardService, settingsService, systemService, handleAPIError } from '../../services/adminService.js';
+import { dashboardService, handleAPIError } from '../../services/adminService.js';
 
 const AdminTestConnection = () => {
   const [testResults, setTestResults] = useState({});
@@ -21,28 +21,28 @@ const AdminTestConnection = () => {
           }
         }
       },
-      {
-        name: 'System Settings',
-        test: async () => {
-          try {
-            const result = await settingsService.getSettings();
-            return { success: true, data: result };
-          } catch (error) {
-            return { success: false, error: handleAPIError(error) };
-          }
-        }
-      },
-      {
-        name: 'System Health',
-        test: async () => {
-          try {
-            const result = await systemService.getHealth();
-            return { success: true, data: result };
-          } catch (error) {
-            return { success: false, error: handleAPIError(error) };
-          }
-        }
-      }
+      // {
+      //   name: 'System Settings',
+      //   test: async () => {
+      //     try {
+      //       const result = await settingsService.getSettings();
+      //       return { success: true, data: result };
+      //     } catch (error) {
+      //       return { success: false, error: handleAPIError(error) };
+      //     }
+      //   }
+      // },
+      // {
+      //   name: 'System Health',
+      //   test: async () => {
+      //     try {
+      //       const result = await systemService.getHealth();
+      //       return { success: true, data: result };
+      //     } catch (error) {
+      //       return { success: false, error: handleAPIError(error) };
+      //     }
+      //   }
+      // }
     ];
 
     const results = {};

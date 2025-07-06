@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { userManagementService, handleAPIError } from '../../services/adminService.js';
+import LoadingAnimation from '../Loading.jsx';
 
 const AdminRenderUsers = () => {
   const [users, setUsers] = useState([]);
@@ -45,28 +46,35 @@ const AdminRenderUsers = () => {
 
   const handleUserAction = async (action, userId) => {
     try {
+      if (!userId || typeof userId !== 'string') {
+        alert('Invalid user ID');
+        return;
+      }
       setActionLoading(prev => ({ ...prev, [userId]: true }));
       
       let result;
       switch (action) {
         case 'delete':
-          if (window.confirm('Are you sure you want to delete this user?')) {
-            result = await userManagementService.deleteUser(userId);
-            setUsers(prev => prev.filter(user => user.id !== userId));
-          }
+          result = await userManagementService.deleteUser(userId);
+          setUsers(prev => prev.filter(user => getUserId(user) !== userId));
           break;
-        case 'activate':
-          result = await userManagementService.activateUser(userId);
-          setUsers(prev => prev.map(user => 
-            user.id === userId ? { ...user, status: 'active' } : user
-          ));
-          break;
-        case 'deactivate':
-          result = await userManagementService.deactivateUser(userId);
-          setUsers(prev => prev.map(user => 
-            user.id === userId ? { ...user, status: 'inactive' } : user
-          ));
-          break;
+        // case 'edit':
+        //   // Implement edit functionality here, e.g., open a modal with user details
+        //   alert(`Edit user functionality not implemented yet for user ID: ${userId}`);
+        //   break;
+        // Uncomment and implement these actions if needed
+        // case 'activate':
+        //   result = await userManagementService.activateUser(userId);
+        //   setUsers(prev => prev.map(user => 
+        //     user.id === userId ? { ...user, status: 'active' } : user
+        //   ));
+        //   break;
+        // case 'deactivate':
+        //   result = await userManagementService.deactivateUser(userId);
+        //   setUsers(prev => prev.map(user => 
+        //     user.id === userId ? { ...user, status: 'inactive' } : user
+        //   ));
+        //   break;
         default:
           break;
       }
@@ -92,9 +100,9 @@ const AdminRenderUsers = () => {
     }
   };
 
-  const getStatusBadgeColor = (status) => {
-    return status === 'active' ? 'bg-green-900/50 text-green-300 border border-green-700/30' : 'bg-red-900/50 text-red-300 border border-red-700/30';
-  };
+  // const getStatusBadgeColor = (status) => {
+  //   return status === 'active' ? 'bg-green-900/50 text-green-300 border border-green-700/30' : 'bg-red-900/50 text-red-300 border border-red-700/30';
+  // };
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -105,22 +113,17 @@ const AdminRenderUsers = () => {
     }
   };
 
+  // Helper to robustly extract user ID
+  const getUserId = (user) => {
+    if (typeof user.id === 'string') return user.id;
+    if (typeof user._id === 'string') return user._id;
+    if (user._id && typeof user._id === 'object' && typeof user._id.$oid === 'string') return user._id.$oid;
+    return '';
+  };
+
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="bg-gray-800/50 p-6 rounded-lg shadow-lg border border-gray-700/50">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-700 rounded w-1/3 mb-6"></div>
-            <div className="space-y-4">
-              <div className="h-10 bg-gray-700 rounded"></div>
-              <div className="h-10 bg-gray-700 rounded"></div>
-            </div>
-            <div className="mt-6">
-              <div className="h-64 bg-gray-700 rounded"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <LoadingAnimation />
     );
   }
 
@@ -183,67 +186,71 @@ const AdminRenderUsers = () => {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">User</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Role</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th> */}
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Created</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-600/50">
-              {filteredUsers.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-700/50 transition-colors duration-200">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div>
-                      <div className="text-sm font-medium text-white">{user.username || 'N/A'}</div>
-                      <div className="text-sm text-gray-400">{user.email || 'N/A'}</div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role || user.account_type)}`}>
-                      {user.role || user.account_type || 'Unknown'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeColor(user.status)}`}>
-                      {user.status || 'Unknown'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
-                    {formatDate(user.created_at || user.createdAt)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
-                      <button 
-                        className="text-blue-400 hover:text-blue-300 transition-colors duration-200 disabled:opacity-50"
-                        disabled={actionLoading[user.id]}
-                      >
-                        Edit
-                      </button>
-                      <button 
-                        onClick={() => handleUserAction('delete', user.id)}
-                        className="text-red-400 hover:text-red-300 transition-colors duration-200 disabled:opacity-50"
-                        disabled={actionLoading[user.id]}
-                      >
-                        {actionLoading[user.id] ? 'Deleting...' : 'Delete'}
-                      </button>
-                      <button 
-                        onClick={() => handleUserAction(
-                          user.status === 'active' ? 'deactivate' : 'activate', 
-                          user.id
-                        )}
-                        className={`transition-colors duration-200 disabled:opacity-50 ${
-                          user.status === 'active' 
-                            ? 'text-yellow-400 hover:text-yellow-300' 
-                            : 'text-green-400 hover:text-green-300'
-                        }`}
-                        disabled={actionLoading[user.id]}
-                      >
-                        {actionLoading[user.id] ? 'Processing...' : 
-                         user.status === 'active' ? 'Deactivate' : 'Activate'}
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {filteredUsers.map((user) => {
+                const userId = getUserId(user);
+                return (
+                  <tr key={userId} className="hover:bg-gray-700/50 transition-colors duration-200">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div>
+                        <div className="text-sm font-medium text-white">{user.username || 'N/A'}</div>
+                        <div className="text-sm text-gray-400">{user.email || 'N/A'}</div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role || user.account_type)}`}>
+                        {user.account_type || 'Unknown'}
+                      </span>
+                    </td>
+                    {/* <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeColor(user.status)}`}>
+                        {user.status || 'Unknown'}
+                      </span>
+                    </td> */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                      {formatDate(user.created_at || user.createdAt)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex space-x-2">
+                        {/* <button 
+                          className="text-blue-400 hover:text-blue-300 transition-colors duration-200 disabled:opacity-50"
+                          onClick={() => handleUserAction('edit', user.id)}
+                          disabled={actionLoading[user.id]}
+                        >
+                          Edit
+                        </button> */}
+                        <button 
+                          onClick={() => handleUserAction('delete', userId)}
+                          className="text-red-400 hover:text-red-300 transition-colors duration-200 disabled:opacity-50"
+                          disabled={actionLoading[userId]}
+                        >
+                          {actionLoading[userId] ? 'Deleting...' : 'Delete'}
+                        </button>
+                        {/* <button 
+                          onClick={() => handleUserAction(
+                            user.status === 'active' ? 'deactivate' : 'activate', 
+                            user.id
+                          )}
+                          className={`transition-colors duration-200 disabled:opacity-50 ${
+                            user.status === 'active' 
+                              ? 'text-yellow-400 hover:text-yellow-300' 
+                              : 'text-green-400 hover:text-green-300'
+                          }`}
+                          disabled={actionLoading[user.id]}
+                        >
+                          {actionLoading[user.id] ? 'Processing...' : 
+                           user.status === 'active' ? 'Deactivate' : 'Activate'}
+                        </button> */}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -266,4 +273,4 @@ const AdminRenderUsers = () => {
   );
 };
 
-export default AdminRenderUsers; 
+export default AdminRenderUsers;
