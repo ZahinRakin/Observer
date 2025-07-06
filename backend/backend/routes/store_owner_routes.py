@@ -19,12 +19,23 @@ from backend.controllers.store_owner_controllers import (
     create_news_for_store_owner
 )
 from pydantic import BaseModel
+from typing import Optional
 
 # Pydantic model for news creation (without auto-generated fields)
 class NewsCreate(BaseModel):
     product: str
     title: str
     description: str
+
+# Pydantic model for store owner updates (without password requirement)
+class StoreOwnerUpdate(BaseModel):
+    fname: Optional[str] = None
+    lname: Optional[str] = None
+    email: Optional[str] = None
+    username: Optional[str] = None
+    account_type: Optional[str] = None
+    avatar: Optional[str] = None
+    cover_image: Optional[str] = None
 
 router = APIRouter()
 
@@ -41,7 +52,7 @@ async def get_stores_route(store_owner_id: str):
     return await get_stores(store_owner_id)
 
 @router.put("/{store_owner_id}")
-async def update_store_owner_route(store_owner_id: str, store_owner: StoreOwner = Body(...)):
+async def update_store_owner_route(store_owner_id: str, store_owner: StoreOwnerUpdate = Body(...)):
     return await update_store_owner(store_owner_id, store_owner)
 
 # Dashboard Statistics

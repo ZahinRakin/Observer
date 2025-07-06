@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Request, Depends, Body
 from pydantic import BaseModel
-from typing import Annotated
+from typing import Annotated, Optional
 
 from backend.models.user_model import User
 from backend.controllers.user_controllers import (
@@ -10,9 +10,20 @@ from backend.controllers.user_controllers import (
   refresh_access_token,
   list_users,
   delete_user,
-  get_user_details
+  get_user_details,
+  update_user
 )
 from backend.middlewares.auth import get_user
+
+# Pydantic model for user updates (without password requirement)
+class UserUpdate(BaseModel):
+    fname: Optional[str] = None
+    lname: Optional[str] = None
+    email: Optional[str] = None
+    username: Optional[str] = None
+    account_type: Optional[str] = None
+    avatar: Optional[str] = None
+    cover_image: Optional[str] = None
 
 router = APIRouter()
 class LoginData(BaseModel):
@@ -34,8 +45,7 @@ async def get_user_details_route(user_id: str):
   return await get_user_details(user_id)
 
 @router.put("/{user_id}")
-async def update_user(user_id: str, user_data: User):
-  from backend.controllers.user_controllers import update_user
+async def update_user_route(user_id: str, user_data: UserUpdate = Body(...)):
   return await update_user(user_id, user_data)
 
 @router.delete("/{user_id}")

@@ -88,13 +88,33 @@ async def get_store_owner(store_owner_id: str):
     return model_to_dict(owner)
 
 async def update_store_owner(store_owner_id: str, data):
-    owner = await StoreOwner.get(store_owner_id)
-    if not owner:
-        raise HTTPException(status_code=404, detail="Store owner not found")
-    for k, v in data.model_dump(exclude_unset=True).items():
-        setattr(owner, k, v)
-    await owner.save()
-    return model_to_dict(owner)
+    try:
+        owner = await StoreOwner.get(store_owner_id)
+        if not owner:
+            raise HTTPException(status_code=404, detail="Store owner not found")
+        
+        # Get only the fields that were explicitly set in the request
+        update_data = data.model_dump(exclude_unset=True)
+        
+        # Validate that we have at least one field to update
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No fields provided for update")
+        
+        print(f"🔍 DEBUG - Updating store owner {store_owner_id} with fields: {list(update_data.keys())}")
+        
+        # Update only the provided fields
+        for field_name, field_value in update_data.items():
+            if field_value is not None:  # Only update non-null values
+                setattr(owner, field_name, field_value)
+        
+        await owner.save()
+        return model_to_dict(owner)
+    except HTTPException:
+        # Re-raise HTTPExceptions (like 404, 400)
+        raise
+    except Exception as e:
+        print(f"❌ Error updating store owner: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error updating store owner: {str(e)}")
 
 async def get_stores(store_owner_id: str):
     owner = await StoreOwner.get(store_owner_id)

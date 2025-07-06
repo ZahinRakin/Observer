@@ -244,7 +244,7 @@ const StoreOwnerRenderDashboard = ({ user }) => {
       </div>
 
       {/* Quick Actions Section */}
-      <div className="bg-gradient-to-br from-slate-800 to-gray-800 rounded-xl shadow-lg border border-gray-700/50 p-6 backdrop-blur-sm">
+      {/* <div className="bg-gradient-to-br from-slate-800 to-gray-800 rounded-xl shadow-lg border border-gray-700/50 p-6 backdrop-blur-sm">
         <h3 className="text-xl font-bold text-white mb-4">Quick Actions</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button className="flex items-center gap-3 p-4 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-all duration-200 border border-gray-600/50">
@@ -283,7 +283,7 @@ const StoreOwnerRenderDashboard = ({ user }) => {
             </div>
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* Business Overview Illustration */}
       <div className="flex flex-col items-center mt-8">

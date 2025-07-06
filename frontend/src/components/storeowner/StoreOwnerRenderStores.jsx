@@ -781,7 +781,7 @@ const StoreOwnerRenderStores = ({ user }) => {
           {/* Debug section - remove in production */}
           <div className="text-xs text-gray-400">
             <div>User ID: {currentUser?.id || 'undefined'}</div>
-            <div>User Role: {currentUser?.role || 'undefined'}</div>
+            {/* <div>User Role: {currentUser?.role || 'undefined'}</div> */}
             <div>Account Type: {currentUser?.account_type || 'undefined'}</div>
           </div>
         </div>

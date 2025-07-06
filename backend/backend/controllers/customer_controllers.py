@@ -26,4 +26,31 @@ async def get_all_customers():
   customers = await Customer.find_all().to_list()
   return customers
 
+async def update_customer(customer_id: str, customer_data):
+    try:
+        customer = await Customer.get(customer_id)
+        if not customer:
+            raise HTTPException(status_code=404, detail="Customer not found")
+        
+        # Update only the fields that were explicitly set in the request
+        update_data = customer_data.model_dump(exclude_unset=True)
+        
+        # Validate that we have at least one field to update
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No fields provided for update")
+        
+        # Update only the provided fields
+        for field_name, field_value in update_data.items():
+            setattr(customer, field_name, field_value)
+        
+        # Save the updated customer
+        await customer.save()
+        return customer
+        
+    except HTTPException:
+        # Re-raise HTTPExceptions (like 404, 400)
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error updating customer: {str(e)}")
+
 

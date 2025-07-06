@@ -1,9 +1,22 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Body
+from backend.models.customer_model import Customer
 from backend.controllers.customer_controllers import (
     get_all_customers,
-    get_customer
+    get_customer,
+    update_customer
 )
+from pydantic import BaseModel
+from typing import Optional
 
+# Pydantic model for customer updates (without password requirement)
+class CustomerUpdate(BaseModel):
+    fname: Optional[str] = None
+    lname: Optional[str] = None
+    email: Optional[str] = None
+    username: Optional[str] = None
+    account_type: Optional[str] = None
+    avatar: Optional[str] = None
+    cover_image: Optional[str] = None
 
 router = APIRouter()
 
@@ -15,15 +28,13 @@ async def list_customers():
 async def get_customer_route(customer_id: str):
     return await get_customer(customer_id)
 
-
+@router.put("/{customer_id}")
+async def update_customer_route(customer_id: str, customer: CustomerUpdate = Body(...)):
+    return await update_customer(customer_id, customer)
 
 # @router.post("/")
 # async def create_customer_route(customer: Customer = Body(...)):
 #     return await create_customer(customer)
-
-# @router.put("/{customer_id}")
-# async def update_customer_route(customer_id: str, customer: Customer = Body(...)):
-#     return await update_customer(customer_id, customer)
 
 # @router.delete("/{customer_id}")
 # async def delete_customer_route(customer_id: str):

@@ -164,15 +164,36 @@ async def refresh_access_token(access_token: str):
 # veteran
 async def update_user(user_id: str, user_data):
     try:
-        user = await get_user_details(user_id)
-        for k, v in user_data.model_dump(exclude_unset=True).items():
-            setattr(user, k, v)
+        # Try to find the user in each collection to get the actual object
+        user = await Customer.get(user_id)
+        if not user:
+            user = await StoreOwner.get(user_id)
+        if not user:
+            user = await Admin.get(user_id)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Get only the fields that were explicitly set in the request
+        update_data = user_data.model_dump(exclude_unset=True)
+        
+        # Validate that we have at least one field to update
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No fields provided for update")
+        
+        print(f"🔍 DEBUG - Updating user {user_id} with fields: {list(update_data.keys())}")
+        
+        # Update only the provided fields
+        for field_name, field_value in update_data.items():
+            if field_value is not None:  # Only update non-null values
+                setattr(user, field_name, field_value)
+        
         await user.save()
         return user
     except HTTPException as e:
-        # Re-raise HTTPExceptions (like 404) from get_user_details
+        # Re-raise HTTPExceptions (like 404, 400)
         raise e
     except Exception as e:
+        print(f"❌ Error updating user: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error updating user: {str(e)}")
 # veteran
 async def get_user_details(user_id: str):
