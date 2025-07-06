@@ -20,9 +20,9 @@ const RenderProducts = () => {
 
   // Debug component mount
   useEffect(() => {
-    console.log('🔍 DEBUG - RenderProducts component mounted');
-    console.log('🔍 DEBUG - Initial user state:', user);
-    console.log('🔍 DEBUG - VITE_API_URL:', import.meta.env.VITE_API_URL);
+    // console.log('🔍 DEBUG - RenderProducts component mounted');
+    // console.log('🔍 DEBUG - Initial user state:', user);
+    // console.log('🔍 DEBUG - VITE_API_URL:', import.meta.env.VITE_API_URL);
     
     return () => {
       console.log('🔍 DEBUG - RenderProducts component unmounting');
@@ -30,72 +30,83 @@ const RenderProducts = () => {
   }, []);
 
   useEffect(() => {
-    console.log('🔍 CustomerRenderProducts - useEffect triggered with user?.id:', user?.id);
-    console.log('🔍 DEBUG - User object in useEffect:', user);
-    console.log('🔍 DEBUG - User ID type:', typeof user?.id);
-    console.log('🔍 DEBUG - User ID value:', user?.id);
+    // console.log('🔍 CustomerRenderProducts - useEffect triggered with user?.id:', user?.id);
+    // console.log('🔍 DEBUG - User object in useEffect:', user);
+    // console.log('🔍 DEBUG - User ID type:', typeof user?.id);
+    // console.log('🔍 DEBUG - User ID value:', user?.id);
     
     const fetchProducts = async () => {
       try {
         setLoading(true);
         setError(null);
         
-        console.log('🔍 DEBUG - Fetching products for user:', user?.id);
-        console.log('🔍 DEBUG - API URL:', import.meta.env.VITE_API_URL);
+        // console.log('🔍 DEBUG - Fetching products for user:', user?.id);
+        // console.log('🔍 DEBUG - API URL:', import.meta.env.VITE_API_URL);
         
         // Don't return early if no user - let the API handle it
         // This might be causing the issue
         
         // Test API connectivity first
-        try {
-          console.log('🔍 DEBUG - Testing API connectivity...');
-          const testResponse = await axios.get(`/api/v1/healthcheck/`, {
-            timeout: 5000
-          });
-          console.log('🔍 DEBUG - API connectivity test successful:', testResponse.status);
-        } catch (testErr) {
-          console.error('❌ API connectivity test failed:', testErr.message);
-          // Don't throw here, continue with the main requests
-        }
+        // try {
+        //   console.log('🔍 DEBUG - Testing API connectivity...');
+        //   const testResponse = await axios.get(`/api/v1/healthcheck/`, {
+        //     timeout: 5000
+        //   });
+        //   console.log('🔍 DEBUG - API connectivity test successful:', testResponse.status);
+        // } catch (testErr) {
+        //   console.error('❌ API connectivity test failed:', testErr.message);
+        //   // Don't throw here, continue with the main requests
+        // }
         
         // Make both requests regardless of user state
-        const requests = [];
+        // const requests = [];
         
         // Only fetch user-specific products if user ID exists
-        if (user?.id) {
-          requests.push(
-            axios.get(`/api/v1/product/customer/${user.id}`, {
-              timeout: 10000
-            })
-          );
-        } else {
-          // If no user, set empty array for subscribed products
-          requests.push(Promise.resolve({ data: [] }));
-        }
-        
-        // Always fetch all products
-        requests.push(
-          axios.get(`/api/v1/product/`, {
-            timeout: 10000
-          })
-        );
+        // if (user?.id) {
+        //   requests.push(
+        //     axios.get(`/api/v1/product/customer/${user.id}`, {
+        //       timeout: 10000
+        //     })
+        //   );
+        // } else {
+        //   // If no user, set empty array for subscribed products
+        //   requests.push(Promise.resolve({ data: [] }));
+        // }
+        let response = await axios.get(`/api/v1/product/customer/${user?.id || ''}`, { timeout: 10000 });
+        const subscribedProducts = response.data || [];
 
-        console.log('🔍 DEBUG - Making API requests...');
-        const [realProductsResponse, realAllProductsResponse] = await Promise.all(requests);
+        response = await axios.get(`/api/v1/product/`, { timeout: 10000 });
+        const allProducts = response.data || [];
+
+        const subscribedIds = new Set(subscribedProducts.map(p => p._id));
+        const unsubscribedProducts = allProducts.filter(p => !subscribedIds.has(p._id));
+
+        console.log('🔍 Subscribed products:', subscribedProducts);
+        console.log('🔍 Unsubscribed products:', unsubscribedProducts);
+
+        // Always fetch all products
+        // requests.push(
+        //   axios.get(`/api/v1/product/`, {
+        //     timeout: 10000
+        //   })
+        // );
+
+        // console.log('🔍 DEBUG - Making API requests...');
+        // const [subscribedProducts, unsubscribedProducts] = await Promise.all(subscribedProducts, unsubscribedProducts);
 
         // Extract data from axios responses and ensure they are arrays
-        const realProducts = Array.isArray(realProductsResponse.data) ? realProductsResponse.data : [];
-        const realAllProducts = Array.isArray(realAllProductsResponse.data) ? realAllProductsResponse.data : [];
+        // const subscribedProducts = Array.isArray(subscribedProducts.data) ? subscribedProducts.data : [];
+        // const unsubscribedProducts = Array.isArray(unsubscribedProducts.data) ? unsubscribedProducts.data : [];
 
         console.log('🔍 DEBUG - Fetched products:', { 
-          subscribedCount: realProducts.length, 
-          allCount: realAllProducts.length,
-          subscribedProducts: realProducts,
-          allProducts: realAllProducts
+          subscribedCount: subscribedProducts.length, 
+          allCount: unsubscribedProducts.length,
+          subscribedProducts: subscribedProducts,
+          allProducts: unsubscribedProducts
         });
 
-        setProducts(realProducts);
-        setAllProducts(realAllProducts);
+        setProducts(subscribedProducts);
+        setAllProducts(unsubscribedProducts);
         
       } catch (err) {
         console.error('❌ Error fetching products:', err);
@@ -502,55 +513,20 @@ const RenderProducts = () => {
                 <svg className="mx-auto h-12 w-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-300">No recommendations found</h3>
+                <h3 className="mt-2 text-sm font-medium text-gray-300">No Products found</h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  {searchTerm ? 'Try adjusting your search terms.' : 'Check back later for new recommendations.'}
+                  {searchTerm ? 'Try adjusting your search terms.' : 'Check back later for new Products.'}
                 </p>
               </div>
             ) : (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {filteredAllProducts.map(product => (
-                  <div key={product._id} className="bg-gray-700/50 rounded-lg shadow-md border border-gray-600/50 overflow-hidden backdrop-blur-sm">
-                    <img
-                      src={product.image || "/dummy_product.jpg"}
-                      alt={product.name}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="p-4">
-                      <h3 className="text-lg font-semibold text-gray-200 mb-2">{product.name}</h3>
-                      <p className="text-gray-400 text-sm mb-3">{product.description}</p>
-                      
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        <span className="bg-blue-900/50 text-blue-300 px-2 py-1 rounded text-xs border border-blue-700/50">
-                          {product.category}
-                        </span>
-                        {product.tags?.map((tag, idx) => (
-                          <span key={idx} className="bg-gray-600/50 text-gray-300 px-2 py-1 rounded text-xs border border-gray-500/50">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div className="text-xs text-gray-500 mb-3">
-                        <span>Store: {product.store}</span>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleSubscribe(product._id)}
-                          className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-2 px-3 rounded hover:from-blue-700 hover:to-blue-800 transition-all text-sm font-medium shadow-lg"
-                        >
-                          Subscribe
-                        </button>
-                        <button
-                          onClick={() => handleViewAllNews(product)}
-                          className="bg-gray-600/50 text-gray-300 py-2 px-3 rounded hover:bg-gray-600 transition-colors text-sm border border-gray-500/50"
-                        >
-                          View News
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  <ProductCard
+                    key={product._id}
+                    product={product}
+                    onSubscribe={handleSubscribe}
+                    isSubscribed={false}
+                  />
                 ))}
               </div>
             )}
