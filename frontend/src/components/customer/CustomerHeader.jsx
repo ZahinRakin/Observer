@@ -57,7 +57,7 @@ const CustomerHeader = ({ user, onViewProfile, onEditProfile }) => {
 
       {/* Right Section - Actions and Profile */}
       <div className="flex items-center gap-4">
-        {/* Search Bar */}
+        {/* Search Bar
         <div className="hidden md:flex relative">
           <input
             type="text"
@@ -65,7 +65,7 @@ const CustomerHeader = ({ user, onViewProfile, onEditProfile }) => {
             className="w-64 pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm text-white placeholder-gray-400"
           />
           <div className="absolute left-3 top-2.5 w-4 h-4 bg-gray-400 rounded-full"></div>
-        </div>
+        </div> */}
 
         {/* Notification Bell */}
         <div className="relative">

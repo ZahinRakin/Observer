@@ -64,9 +64,12 @@ async def get_customer_news(customer_id: str):
     products = await Product.find({"subscribers": customer_id}).to_list()
     all_news = []
     for product in products:
-        news_items = await News.find({"product": str(product._id)}).to_list()
+        news_items = await News.find({"product": str(product.id)}).to_list()
         all_news.extend(news_items)
-    return all_news
+    return {
+        "news": all_news,
+        "subscribed_products": products
+    }
 
 async def get_product_news(product_id: str):
     """Get all news for a specific product"""
@@ -109,3 +112,11 @@ async def get_product_news(product_id: str):
     except Exception as e:
         print(f"❌ ERROR in get_product_news: {e}")
         raise HTTPException(status_code=500, detail=f"Error fetching product news: {str(e)}")
+
+async def mark_as_seen(news_id: str):
+    news = await News.get(news_id)
+    if not news:
+        raise HTTPException(status_code=404, detail="News not found")
+    news.seen = True
+    await news.save()
+    return news

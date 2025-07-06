@@ -9,6 +9,7 @@ class News(Document):
   description: str
   author_id: Optional[str] = None  # Made optional for backward compatibility
   author_name: Optional[str] = None  # Made optional for backward compatibility
+  # seen: bool = False
   created_at: datetime = Field(default_factory=lambda : datetime.now(timezone.utc))
   updated_at: datetime = Field(default_factory = lambda : datetime.now(timezone.utc))
   

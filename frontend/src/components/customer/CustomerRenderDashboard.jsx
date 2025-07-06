@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../../contexts/UserContext.jsx';
 import LoadingAnimation from '../Loading.jsx';
+import axios from 'axios';
 
 const formatDate = (date) => {
   if (!date) return '';
@@ -15,6 +16,10 @@ const formatTime = (date) => {
 };
 
 const RenderDashboard = ({ user }) => {
+  console.log('🔍 DEBUG - RenderDashboard component rendered with user:', user);
+  console.log('🔍 DEBUG - User ID:', user?.id);
+  console.log('🔍 DEBUG - User object keys:', user ? Object.keys(user) : 'No user object');
+  
   const [stats, setStats] = useState({
     subscribedProducts: 0,
     unreadNews: 0,
@@ -23,59 +28,139 @@ const RenderDashboard = ({ user }) => {
   });
   const [recentNews, setRecentNews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Debug component mount
+  useEffect(() => {
+    console.log('🔍 DEBUG - RenderDashboard component mounted');
+    console.log('🔍 DEBUG - Initial user state:', user);
+    // console.log('🔍 DEBUG - VITE_API_URL:', import.meta.env.VITE_API_URL);
+    
+    return () => {
+      console.log('🔍 DEBUG - RenderDashboard component unmounting');
+    };
+  }, []);
 
   useEffect(() => {
+    console.log('🔍 DEBUG - useEffect triggered with user?.id:', user?.id);
+    console.log('🔍 DEBUG - User object in useEffect:', user);
+    
     const fetchDashboardData = async () => {
+      console.log('🔍 DEBUG - fetchDashboardData function called');
+      console.log('🔍 DEBUG - Current user ID:', user?.id);
+      // console.log('🔍 DEBUG - API URL:', import.meta.env.VITE_API_URL);
+      
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 800));
+        setLoading(true);
+        setError(null);
         
-        // Mock data - replace with actual API calls
-        setStats({
-          subscribedProducts: 3,
-          unreadNews: 5,
-          totalNews: 12,
-          lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
-        });
+        console.log('🔍 DEBUG - Fetching dashboard data for user:', user?.id);
+        
+        if (!user?.id) {
+          console.log('🔍 DEBUG - No user ID available, returning early');
+          setLoading(false);
+          return;
+        }
 
-        setRecentNews([
-          {
-            id: 1,
-            title: 'New Product Launch',
-            product: 'Premium Smartwatch',
-            time: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
-            isRead: false
-          },
-          {
-            id: 2,
-            title: 'Summer Sale Announcement',
-            product: 'Wireless Earbuds',
-            time: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-            isRead: false
-          },
-          {
-            id: 3,
-            title: 'Product Update Available',
-            product: 'Smart Home Hub',
-            time: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-            isRead: true
-          }
-        ]);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
+        console.log('🔍 DEBUG - About to make API calls...');
+        
+        // Test API connectivity first
+        try {
+          console.log('🔍 DEBUG - Testing API connectivity...');
+          const testResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/healthcheck`, {
+            timeout: 5000
+          });
+          console.log('🔍 DEBUG - API connectivity test successful:', testResponse.status);
+        } catch (testErr) {
+          console.error('❌ API connectivity test failed:', testErr.message);
+          // console.error('❌ API URL being used:', import.meta.env.VITE_API_URL);
+        }
+        
+        // Fetch dashboard statistics
+        
+        const statsResponse = await axios.get(`/api/v1/customer/${user.id}/dashboard/stats`, {
+          timeout: 10000
+        });
+        
+        console.log('🔍 DEBUG - Stats API call successful:', statsResponse.status);
+        console.log('🔍 DEBUG - Stats response data:', statsResponse.data);
+        
+        // Fetch recent news
+        
+        const newsResponse = await axios.get(`/api/v1/customer/${user.id}/dashboard/recent-news?limit=10`, {
+          timeout: 10000
+        });
+        
+        console.log('🔍 DEBUG - News API call successful:', newsResponse.status);
+        console.log('🔍 DEBUG - News response data:', newsResponse.data);
+
+        console.log('🔍 DEBUG - Setting state with real data');
+        setStats(statsResponse.data);
+        setRecentNews(newsResponse.data);
+        
+      } catch (err) {
+        console.error('❌ Error fetching dashboard data:', err);
+        console.error('❌ Error details:', {
+          message: err.message,
+          status: err.response?.status,
+          statusText: err.response?.statusText,
+          data: err.response?.data,
+          config: err.config
+        });
+        
+        setError(err.response?.data?.detail || err.message || 'Failed to fetch dashboard data');
+        
+        // Set fallback data
+        console.log('🔍 DEBUG - Setting fallback data due to error');
+        setStats({
+          subscribedProducts: 0,
+          unreadNews: 0,
+          totalNews: 0,
+          lastActivity: null
+        });
+        setRecentNews([]);
       } finally {
+        console.log('🔍 DEBUG - Setting loading to false');
         setLoading(false);
       }
     };
 
+    console.log('🔍 DEBUG - Calling fetchDashboardData');
     fetchDashboardData();
-  }, []);
+  }, [user?.id]);
+
+  console.log('🔍 DEBUG - Current component state:', {
+    loading,
+    error,
+    stats,
+    recentNewsLength: recentNews.length,
+    user: user?.id
+  });
 
   if (loading) {
+    console.log('🔍 DEBUG - Rendering loading state');
+    return <LoadingAnimation />;
+  }
+
+  if (error) {
+    console.log('🔍 DEBUG - Rendering error state:', error);
     return (
-      <LoadingAnimation/>
+      <div className="space-y-8">
+        <div className="bg-red-900/50 border border-red-700 rounded-xl p-6">
+          <h2 className="text-xl font-bold text-red-300 mb-2">Error Loading Dashboard</h2>
+          <p className="text-red-200">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
     );
   }
+
+  console.log('🔍 DEBUG - Rendering main dashboard content');
 
   return (
     <div className="space-y-8">
@@ -106,7 +191,7 @@ const RenderDashboard = ({ user }) => {
       </div> */}
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-gradient-to-br from-blue-900/50 to-blue-800/30 rounded-xl shadow-lg p-6 border border-blue-700/30">
           <div className="flex items-center justify-between">
             <div>
@@ -121,7 +206,7 @@ const RenderDashboard = ({ user }) => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-green-900/50 to-green-800/30 rounded-xl shadow-lg p-6 border border-green-700/30">
+        {/* <div className="bg-gradient-to-br from-green-900/50 to-green-800/30 rounded-xl shadow-lg p-6 border border-green-700/30">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-green-300">Unread News</p>
@@ -133,7 +218,7 @@ const RenderDashboard = ({ user }) => {
               </svg>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="bg-gradient-to-br from-purple-900/50 to-purple-800/30 rounded-xl shadow-lg p-6 border border-purple-700/30">
           <div className="flex items-center justify-between">
@@ -151,44 +236,56 @@ const RenderDashboard = ({ user }) => {
       </div>
 
       {/* Recent Activity and Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
         {/* Recent News */}
         <div className="bg-gray-800/50 rounded-xl shadow-lg p-6 border border-gray-700/50">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-gray-200">Recent News</h2>
-            <button className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors duration-200">
+            {/* <button className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors duration-200">
               View All
-            </button>
+            </button> */}
           </div>
           
           <div className="space-y-4">
-            {recentNews.map((news) => (
-              <div key={news.id} className={`p-4 rounded-lg border transition-all duration-200 ${
-                news.isRead 
-                  ? 'bg-gray-700/30 border-gray-600/50 hover:bg-gray-700/50' 
-                  : 'bg-blue-900/30 border-blue-700/50 hover:bg-blue-900/50'
-              }`}>
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h3 className={`font-medium ${news.isRead ? 'text-gray-300' : 'text-blue-300'}`}>
-                      {news.title}
-                    </h3>
-                    <p className="text-sm text-gray-400 mt-1">{news.product}</p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {formatTime(news.time)} • {news.isRead ? 'Read' : 'Unread'}
-                    </p>
-                  </div>
-                  {!news.isRead && (
-                    <div className="w-3 h-3 bg-blue-400 rounded-full ml-2 animate-pulse"></div>
-                  )}
-                </div>
+            {recentNews.length === 0 ? (
+              <div className="text-center py-8">
+                <svg className="mx-auto h-12 w-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <h3 className="mt-2 text-sm font-medium text-gray-300">No recent news</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Subscribe to products to see their latest news and updates here.
+                </p>
               </div>
-            ))}
+            ) : (
+              recentNews.map((news) => (
+                <div key={news.id} className={`p-4 rounded-lg border transition-all duration-200 ${
+                  news.isRead 
+                    ? 'bg-gray-700/30 border-gray-600/50 hover:bg-gray-700/50' 
+                    : 'bg-blue-900/30 border-blue-700/50 hover:bg-blue-900/50'
+                }`}>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className={`font-medium ${news.isRead ? 'text-gray-300' : 'text-blue-300'}`}>
+                        {news.title}
+                      </h3>
+                      <p className="text-sm text-gray-400 mt-1">{news.product}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {formatTime(news.time)} • {news.isRead ? 'Read' : 'Unread'}
+                      </p>
+                    </div>
+                    {!news.isRead && (
+                      <div className="w-3 h-3 bg-blue-400 rounded-full ml-2 animate-pulse"></div>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-gray-800/50 rounded-xl shadow-lg p-6 border border-gray-700/50">
+        {/* <div className="bg-gray-800/50 rounded-xl shadow-lg p-6 border border-gray-700/50">
           <h2 className="text-xl font-bold text-gray-200 mb-6">Quick Actions</h2>
           
           <div className="grid grid-cols-2 gap-4">
@@ -228,11 +325,11 @@ const RenderDashboard = ({ user }) => {
               </div>
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Tips Section */}
-      <div className="bg-gradient-to-r from-gray-800/50 via-gray-700/50 to-gray-800/50 rounded-xl p-6 border border-gray-700/50">
+      {/* <div className="bg-gradient-to-r from-gray-800/50 via-gray-700/50 to-gray-800/50 rounded-xl p-6 border border-gray-700/50">
         <h2 className="text-xl font-bold text-gray-200 mb-4">💡 Pro Tips</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-start space-x-3">
@@ -248,7 +345,7 @@ const RenderDashboard = ({ user }) => {
             <p className="text-sm text-gray-300">Check your dashboard regularly for personalized recommendations</p>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

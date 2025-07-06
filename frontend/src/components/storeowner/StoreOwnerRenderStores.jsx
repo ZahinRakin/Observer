@@ -4,7 +4,6 @@ import StoreCard from '../cards/StoreCard.jsx';
 import StoreForm from '../forms/StoreForm.jsx';
 import ProductForm from '../forms/ProductForm.jsx';
 import ProductCard from '../cards/ProductCard.jsx';
-import NewsCardModal from '../modals/NewsCardModal.jsx';
 import NewsForm from '../forms/NewsForm.jsx';
 import storeOwnerService from '../../services/storeOwnerService.js';
 
@@ -283,8 +282,8 @@ const StoreOwnerRenderStores = ({ user }) => {
 
   const handleViewAllNews = async (product) => {
     try {
-      console.log('🔍 DEBUG - handleViewAllNews called with product:', product);
-      console.log('🔍 DEBUG - currentUser.id:', currentUser?.id);
+      // console.log('🔍 DEBUG - handleViewAllNews called with product:', product);
+      // console.log('🔍 DEBUG - currentUser.id:', currentUser?.id);
       
       if (!currentUser?.id) {
         setError('User ID not found. Please log in again.');
@@ -292,13 +291,13 @@ const StoreOwnerRenderStores = ({ user }) => {
       }
 
       const productId = product.id || product._id;
-      console.log('🔍 DEBUG - Using productId:', productId);
+      // console.log('🔍 DEBUG - Using productId:', productId);
       
       setSelectedProductForNews(product);
-      console.log('🔍 DEBUG - About to call getProductNews with productId:', productId);
+      // console.log('🔍 DEBUG - About to call getProductNews with productId:', productId);
       
       const news = await storeOwnerService.getProductNews(productId);
-      console.log('🔍 DEBUG - Received news from backend:', news);
+      // console.log('🔍 DEBUG - Received news from backend:', news);
       
       setProductNews(news);
       setShowNewsModal(true);
@@ -395,11 +394,11 @@ const StoreOwnerRenderStores = ({ user }) => {
   };
 
   // Temporary debug function to set user role
-  const handleDebugSetRole = () => {
-    const debugUser = { ...currentUser, role: 'storeowner', account_type: 'storeowner' };
-    console.log('Setting debug user:', debugUser);
-    setUser(debugUser);
-  };
+  // const handleDebugSetRole = () => {
+  //   const debugUser = { ...currentUser, role: 'storeowner', account_type: 'storeowner' };
+  //   console.log('Setting debug user:', debugUser);
+  //   setUser(debugUser);
+  // };
 
   const handleRefresh = async () => {
     setRefreshTrigger(prev => prev + 1);

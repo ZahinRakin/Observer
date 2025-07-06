@@ -9,7 +9,8 @@ from backend.controllers.news_controllers import (
     update_news,
     delete_news,
     get_customer_news,
-    get_product_news
+    get_product_news,
+    mark_as_seen
 )
 
 # Model for creating news
@@ -30,7 +31,7 @@ class NewsUpdate(BaseModel):
 
 router = APIRouter()
 
-@router.get("")
+@router.get("/")
 async def list_news():
     return await get_all_news()
 
@@ -42,11 +43,11 @@ async def get_product_news_route(product_id: str):
     print(f"🔍 DEBUG - Backend route returning: {result}")
     return result
 
-@router.get("/{customer_id}/news")
+@router.get("/{customer_id}")
 async def get_customer_news_route(customer_id: str):
     return await get_customer_news(customer_id)
 
-@router.post("")
+@router.post("/")
 async def create_news_route(news: NewsCreate = Body(...)):
     return await create_news(news)
 
@@ -62,3 +63,6 @@ async def delete_news_route(news_id: str):
 async def get_news_route(news_id: str):
     return await get_news(news_id)
 
+@router.post("/mark-as-seen/{news_id}")
+async def mark_as_seen_route(news_id: str):
+    return await mark_as_seen(news_id)

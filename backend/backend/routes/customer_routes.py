@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Query
 from backend.models.customer_model import Customer
 from backend.controllers.customer_controllers import (
     get_all_customers,
     get_customer,
-    update_customer
+    update_customer,
+    get_customer_dashboard_stats,
+    get_customer_recent_news
 )
 from pydantic import BaseModel
 from typing import Optional
@@ -31,6 +33,18 @@ async def get_customer_route(customer_id: str):
 @router.put("/{customer_id}")
 async def update_customer_route(customer_id: str, customer: CustomerUpdate = Body(...)):
     return await update_customer(customer_id, customer)
+
+@router.get("/{customer_id}/dashboard/stats")
+async def get_customer_dashboard_stats_route(customer_id: str):
+    """Get dashboard statistics for a customer"""
+    print("inside the customer_routes.py returning the customer stats.") # debugging log
+    return await get_customer_dashboard_stats(customer_id)
+
+@router.get("/{customer_id}/dashboard/recent-news")
+async def get_customer_recent_news_route(customer_id: str, limit: int = Query(10, ge=1, le=50)):
+    """Get recent news for products the customer is subscribed to"""
+    print("inside the customer_router.py returning the recent-news") # debugging log
+    return await get_customer_recent_news(customer_id, limit)
 
 # @router.post("/")
 # async def create_customer_route(customer: Customer = Body(...)):

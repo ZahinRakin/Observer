@@ -7,7 +7,7 @@ const formatDate = (date) => {
   return d.toLocaleString();
 };
 
-const NewsCard = ({ news, onDelete, onUpdate, onMarkAsSeen }) => {
+const NewsCard = ({ news, onDelete, onUpdate }) => {
   const { user } = useUser();
   const isStoreOwner = 
     user?.role === 'storeowner' || 
@@ -29,13 +29,6 @@ const NewsCard = ({ news, onDelete, onUpdate, onMarkAsSeen }) => {
       color: 'yellow',
       onClick: () => onUpdate?.(news),
       visible: isStoreOwner
-    },
-    markAsSeen: {
-      id: 'news-seen-btn',
-      text: 'Mark as Seen',
-      color: 'blue',
-      onClick: () => onMarkAsSeen?.(news),
-      visible: !isStoreOwner
     }
   };
 
@@ -63,7 +56,7 @@ const NewsCard = ({ news, onDelete, onUpdate, onMarkAsSeen }) => {
           )
         ))}
       </div>
-    </div>
+    </div> 
   );
 };
 

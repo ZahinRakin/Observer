@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import DashboardSkeleton from '../../components/DashboardSkeleton.jsx';
 import { UserContext } from '../../contexts/UserContext.jsx'; 
 // import NewsCard from '../components/cards/NewsCard.jsx';
@@ -8,7 +8,7 @@ import CustomerSidebar from '../../components/customer/CustomerSidebar.jsx';
 import CustomerHeader from '../../components/customer/CustomerHeader.jsx';
 import CustomerFooter from '../../components/customer/CustomerFooter.jsx';
 import RenderDashboard from '../../components/customer/CustomerRenderDashboard.jsx';
-import RenderNews from '../../components/customer/CustomerRenderNews.jsx';
+import RenderNews from '../../components/customer/CustomerRenderNews.jsx'; 
 import RenderProducts from '../../components/customer/CustomerRenderProducts.jsx';
 
 
@@ -17,6 +17,17 @@ const CustomerDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showProfilePage, setShowProfilePage] = useState(false);
   const [editProfileMode, setEditProfileMode] = useState(false);
+
+  // Debug user context
+  useEffect(() => {
+    console.log('🔍 DEBUG - CustomerDashboard mounted');
+    console.log('🔍 DEBUG - User from context:', user);
+    console.log('🔍 DEBUG - User ID from context:', user?._id);
+    console.log('🔍 DEBUG - Active tab:', activeTab);
+  }, [user, activeTab]);
+
+  console.log('🔍 DEBUG - CustomerDashboard rendering with user:', user);
+  console.log('🔍 DEBUG - Active tab:', activeTab);
 
   let content;
   if (showProfilePage) {
@@ -27,8 +38,10 @@ const CustomerDashboard = () => {
         editMode={editProfileMode}
       />
     );
-  } else if (activeTab === 'dashboard') content = <RenderDashboard user={user} />;
-  else if (activeTab === 'news') content = <RenderNews />;
+  } else if (activeTab === 'dashboard') {
+    console.log('🔍 DEBUG - Rendering RenderDashboard with user:', user);
+    content = <RenderDashboard user={user} />;
+  } else if (activeTab === 'news') content = <RenderNews customerId={user.id}/>; //the customer id isn't getting to the RenderNews
   else if (activeTab === 'products') content = <RenderProducts />;
 
   return (

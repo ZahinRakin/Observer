@@ -11,6 +11,10 @@ async def get_product(product_id: str):
         raise HTTPException(status_code=404, detail="Product not found")
     return product
 
+async def get_products_by_customer(customer_id: str):
+    products = await Product.find({"subscribers": {"$in": [customer_id]}}).to_list(length=None)
+    return products
+
 async def create_product(product_data):
     product = Product(**product_data.model_dump())
     await product.insert()
@@ -40,42 +44,42 @@ async def search_product(query: str):
     return products
 
 async def subscribe(customer_id: str, product_id: str):
-    from backend.controllers.customer_controllers import get_customer
-    customer = await get_customer(customer_id)
+    # from backend.controllers.customer_controllers import get_customer
+    # customer = await get_customer(customer_id)
     product = await get_product(product_id)
-    if not customer or not product:
+    if not product:
         raise HTTPException(status_code=404, detail="Customer or Product not found")
 
     # Ensure lists are initialized
-    if customer.monitor_products is None:
-        customer.monitor_products = []
+    # if customer.monitor_products is None:
+    #     customer.monitor_products = []
     if product.subscribers is None:
         product.subscribers = []
 
-    if product not in customer.monitor_products:
-        customer.monitor_products.append(product._id)
-        await customer.save()
-    if customer not in product.subscribers:
-        product.subscribers.append(customer._id)
+    # if product not in customer.monitor_products:
+    #     customer.monitor_products.append(product._id)
+    #     await customer.save()
+    if customer_id not in product.subscribers:
+        product.subscribers.append(customer_id)
         await product.save()
     return {"message": "Subscribed"}
 
 async def unsubscribe(customer_id: str, product_id: str):
-    from backend.controllers.customer_controllers import get_customer
-    customer = await get_customer(customer_id)
+    # from backend.controllers.customer_controllers import get_customer
+    # customer = await get_customer(customer_id)
     product = await get_product(product_id)
-    if not customer or not product:
+    if not product:
         raise HTTPException(status_code=404, detail="Customer or Product not found")
 
-    if customer.monitor_products is None:
-        customer.monitor_products = []
+    # if customer.monitor_products is None:
+    #     customer.monitor_products = []
     if product.subscribers is None:
         product.subscribers = []
 
     # Remove by id
-    customer.monitor_products = [p for p in customer.monitor_products if str(p.ref.id) != product_id]
-    await customer.save()
-    product.subscribers = [u for u in product.subscribers if str(u.ref.id) != customer_id]
+    # customer.monitor_products = [p for p in customer.monitor_products if str(p.ref.id) != product_id]
+    # await customer.save()
+    product.subscribers = [u for u in product.subscribers if str(u) != customer_id]
     await product.save()
     return {"message": "Unsubscribed"}
 

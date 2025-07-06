@@ -38,8 +38,6 @@ const ProductCard = ({
   const handleUnsubscribe = async () => {
     setIsUnsubscribing(true);
     try {
-      // TODO: Implement actual API call
-      await new Promise(resolve => setTimeout(resolve, 500));
       onUnsubscribe?.(product._id);
     } catch (error) {
       console.error('Error unsubscribing:', error);
@@ -51,8 +49,6 @@ const ProductCard = ({
   const handleSubscribe = async () => {
     setIsSubscribing(true);
     try {
-      // TODO: Implement actual API call
-      await new Promise(resolve => setTimeout(resolve, 500));
       onSubscribe?.(product._id);
     } catch (error) {
       console.error('Error subscribing:', error);
